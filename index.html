@@ -74,11 +74,15 @@ var tb=document.getElementById('tb');
 D.concepts.forEach(function(c){
   tb.innerHTML+='<tr class="rh"><td colspan="7" style="color:'+c.c+'">▸ '+c.n+'</td></tr>';
   c.st.forEach(function(s){
-    tb.innerHTML+='<tr style="cursor:pointer" onclick="openChart(\''+s.cd+'\',\''+s.nm+'\')"><td><b>'+s.nm+'</b> <span class="dim">'+s.cd+'</span></td><td><span class="sc '+sc(s.s)+'">'+s.s+' '+s.lv+'</span></td><td>'+s.p.toFixed(2)+'</td><td class="'+c5(s.q5)+'">'+(s.q5>0?'+':'')+s.q5.toFixed(1)+'%</td><td class="'+c5(s.q20)+'">'+(s.q20>0?'+':'')+s.q20.toFixed(1)+'%</td><td>'+s.vr+'x</td><td class="dim">'+s.al+'</td></tr>';
+    tb.innerHTML+='<tr style="cursor:pointer" data-code="'+s.cd+'" data-name="'+s.nm+'"><td><b>'+s.nm+'</b> <span class="dim">'+s.cd+'</span></td><td><span class="sc '+sc(s.s)+'">'+s.s+' '+s.lv+'</span></td><td>'+s.p.toFixed(2)+'</td><td class="'+c5(s.q5)+'">'+(s.q5>0?'+':'')+s.q5.toFixed(1)+'%</td><td class="'+c5(s.q20)+'">'+(s.q20>0?'+':'')+s.q20.toFixed(1)+'%</td><td>'+s.vr+'x</td><td class="dim">'+s.al+'</td></tr>';
   });
 });
 
 var chartOpen=false;
+document.getElementById('tb').addEventListener('click',function(e){
+  var tr=e.target.closest('tr[data-code]');
+  if(tr) openChart(tr.dataset.code,tr.dataset.name);
+});
 function openChart(code,name){
   if(chartOpen)return;
   var kl=KL[code];if(!kl)return;
