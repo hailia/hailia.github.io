@@ -5,36 +5,36 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <title>阿财看盘</title>
 <style>
-*{{margin:0;padding:0;box-sizing:border-box}}
-body{{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0d1117;color:#c9d1d9;padding:6px;font-size:12px}}
-.hdr{{text-align:center;padding:6px 0}}
-.hdr h1{{font-size:17px;color:#58a6ff}}.hdr p{{font-size:9px;color:#8b949e}}
-.concepts{{display:flex;flex-direction:column;gap:3px}}
-.cc{{background:#161b22;border-radius:6px;overflow:hidden}}
-.ct{{display:flex;align-items:center;padding:8px 10px;gap:6px;cursor:pointer;user-select:none}}
-.cb{{width:3px;height:14px;border-radius:2px;flex-shrink:0}}
-.cn{{flex:1;font-size:12px;font-weight:600}}
-.ci{{font-size:8px;color:#8b949e;margin-right:4px}}
-.ca{{font-size:9px;color:#8b949e}}
-.cc.open .ca{{transform:rotate(90deg)}}
-.sl{{display:none}}
-.sr{{display:flex;align-items:center;padding:5px 8px 5px 16px;cursor:pointer;font-size:10px;border-top:1px solid #21262d;gap:3px}}
-.sr:active{{background:#1c2129}}
-.sr .sn{{font-weight:600;flex:1}}
-.sr .so{{font-size:8px;color:#8b949e}}
-.sr .sp{{min-width:48px;text-align:right;font-weight:600}}
-.sr .sq{{min-width:40px;text-align:right;font-size:10px}}
-.up{{color:#f85149}}.dn{{color:#3fb950}}
-.ch{{display:none;padding:4px 6px 8px 16px;background:#0a0e14;border-top:1px solid #21262d;border-bottom:1px solid #21262d}}
-.ch.open{{display:block}}
-.cst{{display:flex;gap:2px;margin-bottom:4px;flex-wrap:wrap}}
-.cst2{{background:#161b22;border-radius:4px;padding:4px 3px;text-align:center;flex:1;min-width:40px}}
-.cst2 .v{{font-size:11px;font-weight:700}}.cst2 .l{{font-size:7px;color:#8b949e}}
-.ctab{{display:flex;gap:0;margin-bottom:4px;border-radius:4px;overflow:hidden}}
-.ctb{{flex:1;text-align:center;padding:3px;font-size:10px;cursor:pointer;background:#21262d;color:#8b949e;border:none}}
-.ctb.on{{background:#1f6feb;color:#fff}}
-svg{{display:block;width:100%;max-width:420px;margin:0 auto}}
-.footer{{text-align:center;font-size:8px;color:#484f58;margin-top:10px;padding:4px}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0d1117;color:#c9d1d9;padding:6px;font-size:12px}
+.hdr{text-align:center;padding:6px 0}
+.hdr h1{font-size:17px;color:#58a6ff}.hdr p{font-size:9px;color:#8b949e}
+.concepts{display:flex;flex-direction:column;gap:3px}
+.cc{background:#161b22;border-radius:6px;overflow:hidden}
+.ct{display:flex;align-items:center;padding:8px 10px;gap:6px;cursor:pointer;user-select:none}
+.cb{width:3px;height:14px;border-radius:2px;flex-shrink:0}
+.cn{flex:1;font-size:12px;font-weight:600}
+.ci{font-size:8px;color:#8b949e;margin-right:4px}
+.ca{font-size:9px;color:#8b949e}
+.cc.open .ca{transform:rotate(90deg)}
+.sl{display:none}
+.sr{display:flex;align-items:center;padding:5px 8px 5px 16px;cursor:pointer;font-size:10px;border-top:1px solid #21262d;gap:3px}
+.sr:active{background:#1c2129}
+.sr .sn{font-weight:600;flex:1}
+.sr .so{font-size:8px;color:#8b949e}
+.sr .sp{min-width:48px;text-align:right;font-weight:600}
+.sr .sq{min-width:40px;text-align:right;font-size:10px}
+.up{color:#f85149}.dn{color:#3fb950}
+.ch{display:none;padding:4px 6px 8px 16px;background:#0a0e14;border-top:1px solid #21262d;border-bottom:1px solid #21262d}
+.ch.open{display:block}
+.cst{display:flex;gap:2px;margin-bottom:4px;flex-wrap:wrap}
+.cst2{background:#161b22;border-radius:4px;padding:4px 3px;text-align:center;flex:1;min-width:40px}
+.cst2 .v{font-size:11px;font-weight:700}.cst2 .l{font-size:7px;color:#8b949e}
+.ctab{display:flex;gap:0;margin-bottom:4px;border-radius:4px;overflow:hidden}
+.ctb{flex:1;text-align:center;padding:3px;font-size:10px;cursor:pointer;background:#21262d;color:#8b949e;border:none}
+.ctb.on{background:#1f6feb;color:#fff}
+svg{display:block;width:100%;max-width:420px;margin:0 auto}
+.footer{text-align:center;font-size:8px;color:#484f58;margin-top:10px;padding:4px}
 </style>
 </head>
 <body>
@@ -48,52 +48,52 @@ var ST=[["sh600392","盛和资源","氧化镝龙头"],["sh603663","三祥新材"
 var GR=[{n:"🟣 氧化锆粉体",c:"#ff4757",ids:[0, 1, 2, 3]},{n:"🔴 MLCC被动元件",c:"#e06c75",ids:[4, 5, 6, 7, 8]},{n:"🟠 铝电容/铝箔",c:"#d19a66",ids:[9, 10, 11, 12, 13, 14]},{n:"🔵 铟/战略金属",c:"#528bff",ids:[15, 16, 17, 18, 19, 20]},{n:"🟡 钨/战略金属",c:"#e5c07b",ids:[21, 22, 23, 24]},{n:"⚪ 金刚石散热",c:"#abb2bf",ids:[25]},{n:"💎 玻璃基板",c:"#61afef",ids:[26, 27, 28, 29, 30, 31]},{n:"🔶 HBM/存储芯片",c:"#ffa502",ids:[32, 33, 34, 35, 36, 37]},{n:"💠 CCL覆铜板",c:"#56b6c2",ids:[38, 39, 40, 41, 42, 43, 44, 45, 46, 47]},{n:"🧵 玻纤/电子布",c:"#98c379",ids:[48, 49, 50, 51]},{n:"🔧 半导体设备",c:"#c678dd",ids:[52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62]},{n:"⬛ 半导体材料",c:"#f85149",ids:[63, 64, 65, 66, 67]},{n:"🟤 钽电容",c:"#d55fde",ids:[68, 69, 70]},{n:"🟦 六氟化钨",c:"#569cd6",ids:[71, 72, 73, 74]},{n:"⬛ 碳化硅SiC",c:"#e06c75",ids:[75, 76, 77, 78, 79, 80]},{n:"🟩 氮化镓GaN",c:"#56b6c2",ids:[81, 82, 83]}];
 var oc=-1,openCh=null;
 var pk=document.getElementById("pk");
-GR.forEach(function(g,gi){{
+GR.forEach(function(g,gi){
   pk.innerHTML+='<div class="cc" id="cc'+gi+'"><div class="ct" data-gi="'+gi+'"><div class="cb" style="background:'+g.c+'"></div><div class="cn" style="color:'+g.c+'">'+g.n+'</div><div class="ci">'+g.ids.length+'只</div><div class="ca">&#9654;</div></div><div class="sl" id="sl'+gi+'">';
-  g.ids.forEach(function(i){{
+  g.ids.forEach(function(i){
     var s=ST[i],cd=s[0],nm=s[1],lo=s[2],kl=KL[cd];
     if(!kl||kl.length<2)return;
-    var cs=kl.map(function(r){{return r[2]}}),p=cs[cs.length-1],pc=cs[cs.length-2],dc=(p/pc-1)*100;
+    var cs=kl.map(function(r){return r[2]}),p=cs[cs.length-1],pc=cs[cs.length-2],dc=(p/pc-1)*100;
     pk.innerHTML+='<div class="sr" onclick="event.stopPropagation();sel('+i+')"><span class="sn">'+nm+'</span><span class="so">'+lo+'</span><span class="sp">'+p.toFixed(2)+'</span><span class="sq '+cv(dc)+'">'+(dc>0?"+":"")+dc.toFixed(1)+'%</span></div><div class="ch" id="ch'+i+'"><div class="ctab"><span class="ctb on" onclick="event.stopPropagation();st2('+i+',\'k\')">日K</span><span class="ctb" onclick="event.stopPropagation();st2('+i+',\'f\')">分时</span></div><div class="cst" id="cs'+i+'"></div><div id="ck'+i+'"></div><div id="cf'+i+'" style="display:none"></div></div>';
-  }});
+  });
   pk.innerHTML+='</div></div>';
-}});
-pk.onclick=function(e){{
+});
+pk.onclick=function(e){
   var el=e.target||e.srcElement;
-  while(el&&el!==pk){{
-    if(el.nodeType===1){{
+  while(el&&el!==pk){
+    if(el.nodeType===1){
       var gi=el.getAttribute("data-gi");
-      if(gi!==null){{tg(parseInt(gi));return;}}
-    }}
+      if(gi!==null){tg(parseInt(gi));return;}
+    }
     el=el.parentNode;
-  }}
-}};
-function cv(v){{return v>0?"up":(v<0?"dn":"")}}
-function tg(i){{
+  }
+};
+function cv(v){return v>0?"up":(v<0?"dn":"")}
+function tg(i){
   var sl=document.getElementById("sl"+i);if(!sl)return;
   var cc=document.getElementById("cc"+i);
-  if(oc===i){{sl.style.display="none";cc.className="cc";oc=-1}}
-  else{{
-    if(oc>=0){{var os=document.getElementById("sl"+oc);if(os)os.style.display="none";var oc2=document.getElementById("cc"+oc);if(oc2)oc2.className="cc"}}
+  if(oc===i){sl.style.display="none";cc.className="cc";oc=-1}
+  else{
+    if(oc>=0){var os=document.getElementById("sl"+oc);if(os)os.style.display="none";var oc2=document.getElementById("cc"+oc);if(oc2)oc2.className="cc"}
     sl.style.display="block";cc.className="cc open";oc=i;
-  }}
-}}
-function sel(idx){{
+  }
+}
+function sel(idx){
   var ch=document.getElementById("ch"+idx);
-  if(openCh===idx){{ch.className="ch";openCh=null;return}}
+  if(openCh===idx){ch.className="ch";openCh=null;return}
   if(openCh!==null)document.getElementById("ch"+openCh).className="ch";
   ch.className="ch open";openCh=idx;
   renderInline(idx);
-  setTimeout(function(){{ch.scrollIntoView({{behavior:"smooth",block:"nearest"}})}},100);
-}}
-function st2(idx,t){{
+  setTimeout(function(){ch.scrollIntoView({behavior:"smooth",block:"nearest"})},100);
+}
+function st2(idx,t){
   document.getElementById("ck"+idx).style.display=t==="k"?"block":"none";
   document.getElementById("cf"+idx).style.display=t==="f"?"block":"none";
-}}
-function renderInline(idx){{
+}
+function renderInline(idx){
   var s=ST[idx],cd=s[0],kl=KL[cd];if(!kl||kl.length<2)return;
-  var cs=kl.map(function(r){{return r[2]}}),p=cs[cs.length-1];
-  var m5=cs.slice(-5).reduce(function(a,b){{return a+b}})/5,m10=cs.slice(-10).reduce(function(a,b){{return a+b}})/10,m20=cs.slice(-20).reduce(function(a,b){{return a+b}})/20;
+  var cs=kl.map(function(r){return r[2]}),p=cs[cs.length-1];
+  var m5=cs.slice(-5).reduce(function(a,b){return a+b})/5,m10=cs.slice(-10).reduce(function(a,b){return a+b})/10,m20=cs.slice(-20).reduce(function(a,b){return a+b})/20;
   var c5d=(p/cs[cs.length-5]-1)*100,c20d=(p/cs[cs.length-20]-1)*100;
   document.getElementById("cs"+idx).innerHTML=
   '<div class="cst2"><div class="v">'+p.toFixed(2)+'</div><div class="l">现价</div></div>'+
@@ -102,50 +102,50 @@ function renderInline(idx){{
   '<div class="cst2"><div class="v">'+m10.toFixed(2)+'</div><div class="l">MA10</div></div>'+
   '<div class="cst2"><div class="v">'+m20.toFixed(2)+'</div><div class="l">MA20</div></div>'+
   '<div class="cst2"><div class="v" style="color:'+(c20d>0?"#f85149":"#3fb950")+'">'+(c20d>0?"+":"")+c20d.toFixed(1)+'%</div><div class="l">20日</div></div>';
-  function avg(a,n){{var s=0,c=0;for(var i=Math.max(0,a.length-n);i<a.length;i++){{s+=a[i];c++}}return c?s/c:0}}
+  function avg(a,n){var s=0,c=0;for(var i=Math.max(0,a.length-n);i<a.length;i++){s+=a[i];c++}return c?s/c:0}
   var a5=[],a10=[],a20=[];
-  for(var i=0;i<cs.length;i++){{a5.push(avg(cs.slice(0,i+1),5));a10.push(avg(cs.slice(0,i+1),10));a20.push(avg(cs.slice(0,i+1),20))}}
+  for(var i=0;i<cs.length;i++){a5.push(avg(cs.slice(0,i+1),5));a10.push(avg(cs.slice(0,i+1),10));a20.push(avg(cs.slice(0,i+1),20))}
   var W=420,H=240,PL=44,PR=6,PT=16,PB=24,CW=W-PL-PR,CH=H-PT-PB,hi=0,lo=1e9,mxv=0;
-  kl.forEach(function(r){{if(r[3]>hi)hi=r[3];if(r[4]<lo)lo=r[4];if(r[5]>mxv)mxv=r[5]}});
+  kl.forEach(function(r){if(r[3]>hi)hi=r[3];if(r[4]<lo)lo=r[4];if(r[5]>mxv)mxv=r[5]});
   hi*=1.03;lo*=0.97;var rg=hi-lo||1;
-  function px(i){{return PL+i*CW/(kl.length-1)}}
-  function py(p){{return PT+(hi-p)/rg*CH}}
+  function px(i){return PL+i*CW/(kl.length-1)}
+  function py(p){return PT+(hi-p)/rg*CH}
   var ks='<svg viewBox="0 0 '+W+' '+(H+48)+'" width="100%">';
-  for(var i=0;i<=4;i++){{var y=PT+i*CH/4;ks+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#21262d"/>';ks+='<text x="'+(PL-4)+'" y="'+(y+3)+'" text-anchor="end" font-size="8" fill="#8b949e">'+(hi-i*rg/4).toFixed(1)+'</text>'}}
-  kl.forEach(function(r,i){{var x=px(i),o=py(r[1]),c=py(r[2]),h=py(r[3]),l=py(r[4]);var cl=r[2]>=r[1]?"#f85149":"#3fb950";ks+='<line x1="'+x+'" y1="'+h+'" x2="'+x+'" y2="'+l+'" stroke="'+cl+'"/>';var bw=Math.max(1.5,CW/kl.length*.75),bh=Math.abs(c-o)||1,by=Math.min(c,o);ks+='<rect x="'+(x-bw/2)+'" y="'+by+'" width="'+bw+'" height="'+bh+'" fill="'+cl+'"/>';if(i%5===0)ks+='<text x="'+x+'" y="'+(H-6)+'" text-anchor="middle" font-size="7" fill="#8b949e">'+r[0]+'</text>'}});
-  function dm(v,c){{var d="";v.forEach(function(p,i){{if(p>0)d+=(d?"L":"M")+px(i)+" "+py(p)}});if(d)ks+='<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="1.2"/>'}}
+  for(var i=0;i<=4;i++){var y=PT+i*CH/4;ks+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#21262d"/>';ks+='<text x="'+(PL-4)+'" y="'+(y+3)+'" text-anchor="end" font-size="8" fill="#8b949e">'+(hi-i*rg/4).toFixed(1)+'</text>'}
+  kl.forEach(function(r,i){var x=px(i),o=py(r[1]),c=py(r[2]),h=py(r[3]),l=py(r[4]);var cl=r[2]>=r[1]?"#f85149":"#3fb950";ks+='<line x1="'+x+'" y1="'+h+'" x2="'+x+'" y2="'+l+'" stroke="'+cl+'"/>';var bw=Math.max(1.5,CW/kl.length*.75),bh=Math.abs(c-o)||1,by=Math.min(c,o);ks+='<rect x="'+(x-bw/2)+'" y="'+by+'" width="'+bw+'" height="'+bh+'" fill="'+cl+'"/>';if(i%5===0)ks+='<text x="'+x+'" y="'+(H-6)+'" text-anchor="middle" font-size="7" fill="#8b949e">'+r[0]+'</text>'});
+  function dm(v,c){var d="";v.forEach(function(p,i){if(p>0)d+=(d?"L":"M")+px(i)+" "+py(p)});if(d)ks+='<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="1.2"/>'}
   dm(a5,"#ff6b35");dm(a10,"#ffa502");dm(a20,"#1e90ff");
   ks+='<text x="'+(W-PR-6)+'" y="12" font-size="8" fill="#ff6b35">MA5</text><text x="'+(W-PR-38)+'" y="12" font-size="8" fill="#ffa502">MA10</text><text x="'+(W-PR-70)+'" y="12" font-size="8" fill="#1e90ff">MA20</text>';
   ks+='<text x="'+PL+'" y="'+(H+10)+'" font-size="7" fill="#8b949e">量(手)</text>';
   var VH=40;mxv=mxv||1;
-  kl.forEach(function(r,i){{var vh=r[5]/mxv*(VH-6),bw=Math.max(1.5,CW/kl.length*.75);ks+='<rect x="'+(px(i)-bw/2)+'" y="'+(H+8+VH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(r[2]>=r[1]?"#f8514944":"#3fb95044")+'"/>'}});
+  kl.forEach(function(r,i){var vh=r[5]/mxv*(VH-6),bw=Math.max(1.5,CW/kl.length*.75);ks+='<rect x="'+(px(i)-bw/2)+'" y="'+(H+8+VH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(r[2]>=r[1]?"#f8514944":"#3fb95044")+'"/>'});
   ks+='</svg>';
   document.getElementById("ck"+idx).innerHTML=ks;
   var it=IT[cd]||[];
-  if(it.length>0){{
+  if(it.length>0){
     var ip=[],iv=[];
-    for(var j=0;j<it.length;j++){{ip.push(it[j][1]);iv.push(it[j][2]*100)}}
+    for(var j=0;j<it.length;j++){ip.push(it[j][1]);iv.push(it[j][2]*100)}
     var pc2=kl&&kl.length>1?kl[kl.length-2][2]:0,op=ip[0],lp=ip[ip.length-1];
     var chg=pc2?((lp-pc2)/pc2*100):0,chgC=chg>=0?"#f85149":"#3fb950";
     var ihi=Math.max.apply(null,ip)*1.005,ilo=Math.min.apply(null,ip)*0.995;
-    if(pc2>0){{ihi=Math.max(ihi,pc2*1.005);ilo=Math.min(ilo,pc2*0.995)}}
-    var imxv=0;for(var j=1;j<iv.length;j++){{var mv=iv[j]-iv[j-1];if(mv>imxv)imxv=mv}}imxv=imxv||1;
+    if(pc2>0){ihi=Math.max(ihi,pc2*1.005);ilo=Math.min(ilo,pc2*0.995)}
+    var imxv=0;for(var j=1;j<iv.length;j++){var mv=iv[j]-iv[j-1];if(mv>imxv)imxv=mv}imxv=imxv||1;
     var iW=420,iH=220,iPL=40,iPR=6,iPT=16,iPB=26,iCW=iW-iPL-iPR,iCH=iH-iPT-iPB,irg=ihi-ilo||1;
-    function ipx(j){{return iPL+j*iCW/(ip.length-1)}}
-    function ipy(p){{return iPT+(ihi-p)/irg*iCH}}
+    function ipx(j){return iPL+j*iCW/(ip.length-1)}
+    function ipy(p){return iPT+(ihi-p)/irg*iCH}
     var is='<svg viewBox="0 0 '+iW+' '+(iH+48)+'" width="100%">';
-    for(var j=0;j<=4;j++){{var y=iPT+j*iCH/4;is+='<line x1="'+iPL+'" y1="'+y+'" x2="'+(iW-iPR)+'" y2="'+y+'" stroke="#21262d"/>';is+='<text x="'+(iPL-4)+'" y="'+(y+3)+'" text-anchor="end" font-size="7" fill="#8b949e">'+(ihi-j*irg/4).toFixed(2)+'</text>'}}
+    for(var j=0;j<=4;j++){var y=iPT+j*iCH/4;is+='<line x1="'+iPL+'" y1="'+y+'" x2="'+(iW-iPR)+'" y2="'+y+'" stroke="#21262d"/>';is+='<text x="'+(iPL-4)+'" y="'+(y+3)+'" text-anchor="end" font-size="7" fill="#8b949e">'+(ihi-j*irg/4).toFixed(2)+'</text>'}
     if(pc2>0)is+='<line x1="'+iPL+'" y1="'+ipy(pc2)+'" x2="'+(iW-iPR)+'" y2="'+ipy(pc2)+'" stroke="#8b949e" stroke-width="1" stroke-dasharray="2,4"/>';
-    var pd="";ip.forEach(function(p,j){{pd+=(j?"L":"M")+ipx(j)+" "+ipy(p)}});
+    var pd="";ip.forEach(function(p,j){pd+=(j?"L":"M")+ipx(j)+" "+ipy(p)});
     is+='<path d="'+pd+' L'+ipx(ip.length-1)+" "+ipy(ilo)+" L"+iPL+" "+ipy(ilo)+' Z" fill="#58a6ff22"/>';
     is+='<path d="'+pd+'" fill="none" stroke="#58a6ff" stroke-width="1.5"/>';
-    var avgP=ip.reduce(function(a,b){{return a+b}})/ip.length;
+    var avgP=ip.reduce(function(a,b){return a+b})/ip.length;
     is+='<line x1="'+iPL+'" y1="'+ipy(avgP)+'" x2="'+(iW-iPR)+'" y2="'+ipy(avgP)+'" stroke="#ffa502" stroke-width="1.5" stroke-dasharray="6,2"/>';
-    it.forEach(function(r,j){{if(j%30===0||j===it.length-1)is+='<text x="'+ipx(j)+'" y="'+(iH-6)+'" text-anchor="middle" font-size="7" fill="#8b949e">'+r[0]+'</text>'}});
+    it.forEach(function(r,j){if(j%30===0||j===it.length-1)is+='<text x="'+ipx(j)+'" y="'+(iH-6)+'" text-anchor="middle" font-size="7" fill="#8b949e">'+r[0]+'</text>'});
     is+='<text x="'+iPL+'" y="11" font-size="10" font-weight="700" fill="'+chgC+'">'+(chg>=0?"+":"")+chg.toFixed(2)+'%</text><text x="'+(iPL+54)+'" y="11" font-size="7" fill="#58a6ff">价'+lp.toFixed(2)+'</text><text x="'+(iPL+108)+'" y="11" font-size="7" fill="#ffa502">均'+avgP.toFixed(2)+'</text>';
     is+='<text x="'+iPL+'" y="'+(iH+10)+'" font-size="7" fill="#8b949e">量(手)</text>';
     var iVH=40;
-    it.forEach(function(r,j){{var mv=(j>0?(iv[j]-iv[j-1]):iv[j]),vh=(mv||1)/imxv*(iVH-6),bw=Math.max(0.5,iCW/it.length*.8);is+='<rect x="'+(ipx(j)-bw/2)+'" y="'+(iH+8+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(j>0&&ip[j]>=ip[j-1]?"#f8514988":"#3fb95088")+'"/>'}});
+    it.forEach(function(r,j){var mv=(j>0?(iv[j]-iv[j-1]):iv[j]),vh=(mv||1)/imxv*(iVH-6),bw=Math.max(0.5,iCW/it.length*.8);is+='<rect x="'+(ipx(j)-bw/2)+'" y="'+(iH+8+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(j>0&&ip[j]>=ip[j-1]?"#f8514988":"#3fb95088")+'"/>'});
     is+='</svg>';
     document.getElementById("cf"+idx).innerHTML=is;
     document.getElementById("cs"+idx).innerHTML=
@@ -155,10 +155,10 @@ function renderInline(idx){{
     '<div class="cst2"><div class="v">'+op.toFixed(2)+'</div><div class="l">开盘</div></div>'+
     '<div class="cst2"><div class="v">'+(pc2?pc2.toFixed(2):"-")+'</div><div class="l">昨收</div></div>'+
     '<div class="cst2"><div class="v">'+(imxv/10000).toFixed(1)+'万</div><div class="l">峰值量</div></div>';
-  }}else{{
+  }else{
     document.getElementById("cf"+idx).innerHTML='<div style="text-align:center;padding:20px;color:#8b949e;font-size:11px">暂无分时数据</div>';
-  }}
-}}
+  }
+}
 </script>
 </body>
 </html>
