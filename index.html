@@ -138,7 +138,7 @@ function pick(idx){
     is+='<text x="'+(iW-iPR-8)+'" y="12" font-size="8" fill="#58a6ff">价</text><text x="'+(iW-iPR-32)+'" y="12" font-size="8" fill="#ffa502">均'+avgP.toFixed(2)+'</text>';
     var iVH=48;
     is+='<text x="'+iPL+'" y="'+(iH+12)+'" font-size="8" fill="#8b949e">量(手)</text>';
-    intra.forEach((r,i)=>{var vh=var mv=(i>0?r[2]-(intra[i-1]?intra[i-1][2]:0):r[2]);var vh=(mv||1)/imxv*(iVH-6),bw=Math.max(0.5,iCW/intra.length*.8);is+='<rect x="'+(ipx(i)-bw/2)+'" y="'+(iH+10+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(i>0&&ip[i]>=ip[i-1]?'#f8514988':'#3fb95088')+'"/>'});
+    intra.forEach((r,i)=>{var mv=(i>0?r[2]-(intra[i-1]?intra[i-1][2]:0):r[2]);var vh=(mv||1)/imxv*(iVH-6),bw=Math.max(0.5,iCW/intra.length*.8);is+='<rect x="'+(ipx(i)-bw/2)+'" y="'+(iH+10+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(i>0&&ip[i]>=ip[i-1]?'#f8514988':'#3fb95088')+'"/>'});
     is+='</svg>';
     document.getElementById("cf").innerHTML=is;
   }else{
@@ -233,7 +233,7 @@ function renderIntra(key,intra){
   is+='<text x="'+(iW-iPR-8)+'" y="12" font-size="8" fill="#58a6ff">价</text><text x="'+(iW-iPR-32)+'" y="12" font-size="8" fill="#ffa502">均'+avgP.toFixed(2)+'</text>';
   is+='<text x="'+iPL+'" y="'+(iH+12)+'" font-size="8" fill="#8b949e">量(手)</text>';
   var iVH=48;
-  intra.forEach(function(r,i){var vh=var mv=(i>0?r[2]-(intra[i-1]?intra[i-1][2]:0):r[2]);var vh=(mv||1)/imxv*(iVH-6),bw=Math.max(0.5,iCW/intra.length*.8);is+='<rect x="'+(ipx(i)-bw/2)+'" y="'+(iH+10+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(i>0&&ip[i]>=ip[i-1]?"#3fb95088":"#f8514988")+'"/>'});
+  intra.forEach(function(r,i){var mv=(i>0?r[2]-(intra[i-1]?intra[i-1][2]:0):r[2]);var vh=(mv||1)/imxv*(iVH-6),bw=Math.max(0.5,iCW/intra.length*.8);is+='<rect x="'+(ipx(i)-bw/2)+'" y="'+(iH+10+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(i>0&&ip[i]>=ip[i-1]?"#3fb95088":"#f8514988")+'"/>'});
   is+='</svg>';
   document.getElementById("cf").innerHTML=is;
 }
