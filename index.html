@@ -120,7 +120,7 @@ function pick(idx){
   kl.forEach((r,i)=>{var vh=r[5]/mxv*(VH-8),bw=Math.max(1.5,CW/kl.length*.75);ks+='<rect x="'+(px(i)-bw/2)+'" y="'+(H+10+VH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(r[2]>=r[1]?'#f8514944':'#3fb95044')+'"/>'});
   ks+='</svg>';
   document.getElementById("ck").innerHTML=ks;
-  var intra=INTRA[key]||[];
+  var intra=(INTRA[key]||[]);
   if(intra.length>0){
     var ip=intra.map(r=>r[1]),iv=intra.map(r=>r[2]);
     var ihi=Math.max(...ip)*1.005,ilo=Math.min(...ip)*0.995;var imxv=0;for(var vi=0;vi<iv.length;vi++){var mv=vi>0?iv[vi]-(iv[vi-1]||0):iv[vi];if(mv>imxv)imxv=mv;}imxv=imxv||1;
