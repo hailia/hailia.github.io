@@ -263,7 +263,7 @@ setInterval(tryConnect,60000);
 
 function fetchIntra(codeKey){
   var x=new XMLHttpRequest();
-  var apiUrl=DATA_SERVER?DATA_SERVER+"/api/minute/"+codeKey:"https://web.ifzq.gtimg.cn/appstock/app/minute/query?code="+codeKey;x.open("GET",apiUrl+"?_="+Date.now(),true);
+  var apiUrl=DATA_SERVER?DATA_SERVER+"/api/minute/"+codeKey:"https://web.ifzq.gtimg.cn/appstock/app/minute/query?code="+codeKey;x.open("GET",apiUrl+"?_="+Date.now(),true);x.send();
   x.onload=function(){
     if(x.status!==200)return;
     try{
