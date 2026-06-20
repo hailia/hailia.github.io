@@ -53,7 +53,7 @@ var GR=[{n:"🔥 金刚石散热",c:"#1e90ff",ids:[0]},{n:"🔥 MLCC/氧化锆",
 var oc=-1,openCh=null;
 var pk=document.getElementById("pk");
 GR.forEach(function(g,gi){
-  pk.innerHTML+='<div class="cc" id="cc'+gi+'"><div class="ct" onclick="tg('+gi+')"><div class="cb" style="background:'+g.c+'"></div><div class="cn" style="color:'+g.c+'">'+g.n+'</div><div class="ci">'+g.ids.length+'只</div><div class="ca">&#9654;</div></div><div class="sl" id="sl'+gi+'">';
+  pk.innerHTML+='<div class="cc" id="cc'+gi+'"><div class="ct" data-gi="'+gi+'"><div class="cb" style="background:'+g.c+'"></div><div class="cn" style="color:'+g.c+'">'+g.n+'</div><div class="ci">'+g.ids.length+'只</div><div class="ca">&#9654;</div></div><div class="sl" id="sl'+gi+'">';
   g.ids.forEach(function(i){
     var s=ST[i],cd=s[0],nm=s[1],lo=s[2],kl=KL[cd];
     if(!kl||kl.length<2)return;
@@ -61,6 +61,17 @@ GR.forEach(function(g,gi){
     pk.innerHTML+='<div class="sr" id="sr'+i+'" onclick="sel('+i+')"><span class="sn">'+nm+'</span><span class="so">'+lo+'</span><span class="sp">'+p.toFixed(2)+'</span><span class="sq '+cv(dc)+'">'+(dc>0?"+":"")+dc.toFixed(1)+'%</span></div><div class="ch" id="ci'+i+'"><div class="ctab"><span class="ctb on" id="tk'+i+'" onclick="event.stopPropagation();st2('+i+',\'k\')">日K</span><span class="ctb" id="tf'+i+'" onclick="event.stopPropagation();st2('+i+',\'f\')">分时</span></div><div class="cst" id="cs'+i+'"></div><div id="ck'+i+'"></div><div id="cf'+i+'" style="display:none"></div></div>';
   });
   pk.innerHTML+='</div></div>';
+});
+// Click delegation for concept cards
+document.getElementById("pk").addEventListener("click",function(e){
+  var el=e.target;
+  while(el&&el!==document.getElementById("pk")){
+    if(el.classList.contains("ct")&&el.dataset.gi){
+      tg(parseInt(el.dataset.gi));
+      return;
+    }
+    el=el.parentElement;
+  }
 });
 
 function cv(v){return v>0?"up":(v<0?"dn":"")}
@@ -70,7 +81,7 @@ function tg(i){
   var cc=document.getElementById("cc"+i);
   if(oc===i){
     sl.style.display="none";
-    if(cc)cc.className="cc";
+    cc.className="cc";
     oc=-1;
   }else{
     if(oc>=0){
@@ -78,7 +89,7 @@ function tg(i){
       var oc2=document.getElementById("cc"+oc);if(oc2)oc2.className="cc";
     }
     sl.style.display="block";
-    if(cc)cc.className="cc open";
+    cc.className="cc open";
     oc=i;
   }
 }
