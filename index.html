@@ -63,16 +63,16 @@ GR.forEach(function(g,gi){
   pk.innerHTML+='</div></div>';
 });
 // Click delegation for concept cards
-document.getElementById("pk").addEventListener("click",function(e){
-  var el=e.target;
-  while(el&&el!==document.getElementById("pk")){
-    if(el.classList.contains("ct")&&el.dataset.gi){
-      tg(parseInt(el.dataset.gi));
+document.getElementById("pk").onclick=function(e){
+  var el=e.target||e.srcElement;
+  while(el&&el!==this){
+    if(el.getAttribute("data-gi")!==null){
+      tg(parseInt(el.getAttribute("data-gi")));
       return;
     }
-    el=el.parentElement;
+    el=el.parentNode;
   }
-});
+};
 
 function cv(v){return v>0?"up":(v<0?"dn":"")}
 
