@@ -38,7 +38,7 @@ svg{display:block;width:100%;max-width:480px;margin:0 auto}
 </style>
 </head>
 <body>
-<div class="hdr"><h1>🤑 阿财看盘</h1><p id="subtitle"></p><p style="font-size:9px;margin-top:1px"><span id="live-badge" style="color:#8b949e">休市</span> | 刷新 <span id="refresh-time">--:--:--</span></p></div>
+<div class="hdr"><h1>🤑 阿财看盘</h1><p id="subtitle"></p><p style="font-size:9px;margin-top:1px"><span id="live-badge" style="color:#8b949e">休市</span> | <span id="conn-badge" style="color:#8b949e">⏺ 离线</span> | <span id="refresh-time">--</span></p></div>
 
 <div class="concepts" id="pick"></div>
 <div class="tab">
@@ -155,14 +155,47 @@ function isTrading(){
   var t=h*60+m;
   return (t>=570&&t<=690)||(t>=780&&t<=900); // 9:30-11:30, 13:00-15:00
 }
+var DATA_SERVER="";
+
+function tryConnect(){
+  // Try local server first (same WiFi)
+  var urls=["http://192.168.1.14:8898","http://192.168.38.231:8898"];
+  var found=false;
+  function testUrl(i){
+    if(i>=urls.length){document.getElementById("conn-badge").innerHTML='⏺ 离线';return}
+    var x=new XMLHttpRequest();
+    x.open("GET",urls[i]+"/health",true);
+    x.timeout=3000;
+    x.onload=function(){if(x.status===200&&JSON.parse(x.responseText).ok){DATA_SERVER=urls[i];document.getElementById("conn-badge").innerHTML='<span style=\"color:#3fb950\">🟢 实时连接</span>';found=true}else testUrl(i+1)};
+    x.onerror=function(){testUrl(i+1)};
+    x.ontimeout=function(){testUrl(i+1)};
+    x.send();
+  }
+  testUrl(0);
+}
+tryConnect();
+setInterval(tryConnect,60000);
+
 function fetchIntra(codeKey){
   var x=new XMLHttpRequest();
-  x.open("GET","https://web.ifzq.gtimg.cn/appstock/app/minute/query?code="+codeKey+"&_="+Date.now(),true);
+  var apiUrl=DATA_SERVER?DATA_SERVER+"/api/minute/"+codeKey:"https://web.ifzq.gtimg.cn/appstock/app/minute/query?code="+codeKey;x.open("GET",apiUrl+"?_="+Date.now(),true);
   x.onload=function(){
     if(x.status!==200)return;
     try{
       var d=JSON.parse(x.responseText);
-      var mins=d.data[codeKey].data.data;
+      var mins;
+      if(DATA_SERVER){
+        mins=d.minute;
+        var intra=[];
+        for(var i=0;i<mins.length;i++){
+          intra.push([mins[i].t,mins[i].p,mins[i].v]);
+        }
+        INTRA[codeKey]=intra;
+        if(cur!==null&&STOCKS[cur][0]===codeKey&&document.getElementById("tf").className==="tb on"){renderIntra(codeKey,intra)}
+        document.getElementById("refresh-time").textContent=new Date().toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+        return;
+      }
+      mins=d.data[codeKey].data.data;
       var intra=[];
       for(var i=0;i<mins.length;i++){
         var p=mins[i].split(" ");
