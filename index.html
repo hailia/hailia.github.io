@@ -96,12 +96,17 @@ D.concepts.forEach(function(c){
 
 // Click handler - use onclick in the HTML itself (safest approach)
 document.getElementById("tb").onclick=function(e){
-  var tr=e.target;
-  while(tr&&tr.tagName!=="TR")tr=tr.parentElement;
-  if(!tr||!tr.id||!tr.id.startsWith("r_"))return;
-  var code=tr.id.replace("r_","");
-  var name=tr.querySelector("b").textContent;
-  openChart(code,name);
+  var el=e.target;
+  while(el&&el!==this){
+    if(el.tagName==="TR"&&el.id&&el.id.indexOf("r_")===0){
+      var code=el.id.substring(2);
+      var b=el.getElementsByTagName("b")[0];
+      var name=b?b.textContent:"";
+      openChart(code,name);
+      return;
+    }
+    el=el.parentElement;
+  }
 };
 
 function openChart(code,name){
