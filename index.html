@@ -139,7 +139,7 @@ function c5(v){return v>0?"up":(v<0?"dn":"")}
 // Build concept cards with inline stock rows
 var pk=document.getElementById("pick");
 groups.forEach(function(g,i){
-  pk.innerHTML+='<div class="cc" id="cc'+i+'"><div class="cc-top" onclick="toggleConcept('+i+')"><div class="cc-bar" style="background:'+g.c+'"></div><div class="cc-name" style="color:'+g.c+'">'+g.n+'</div><div class="cc-info">'+g.ids.length+'只</div><div class="cc-arrow">▶</div></div><div class="slist" id="sl'+i+'">';
+  pk.innerHTML+='<div class="cc" id="cc'+i+'"><div class="cc-top" onclick="toggleConcept('+i+')"><div class="cc-bar" style="background:'+g.c+'"></div><div class="cc-name" style="color:'+g.c+'">'+g.n+'</div><div class="cc-info">'+g.ids.length+'只</div><div class="cc-arrow" style="padding:0 4px">▶</div></div><div class="slist" id="sl'+i+'">';
   g.ids.forEach(function(j){
     var s=STOCKS[j],cd=s[0],nm=s[1],lo=s[2];
     var kl=KL[cd];
@@ -161,9 +161,9 @@ groups.forEach(function(g,i){
 });
 
 function toggleConcept(i){
-  var cc=document.getElementById("cc"+i);
+  var cc=document.getElementById("cc"+i);if(!cc)return;
   if(openConcept===i){cc.classList.remove("open");openConcept=-1}else{
-    if(openConcept>=0)document.getElementById("cc"+openConcept).classList.remove("open");
+    if(openConcept>=0){var old=document.getElementById("cc"+openConcept);if(old)old.classList.remove("open");}
     cc.classList.add("open");openConcept=i;
   }
 }
