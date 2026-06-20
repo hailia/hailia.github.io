@@ -195,7 +195,8 @@ function pick(idx){
     renderIntra(key,intra);}else{
     document.getElementById("cf").innerHTML='<div style="text-align:center;padding:50px;color:#8b949e">⏸ 正在加载分时...点击其他票试试</div>';
     setTimeout(function(){fetchIntra(key)},500);
-  }
+  document.getElementById("ck").scrollIntoView({behavior:"smooth",block:"start"});
+}
 }
 function st(t){
   document.getElementById("tk").className=t==="k"?"tb on":"tb";
