@@ -45,8 +45,18 @@ var cur=null;
 
 // Build picker
 var pk=document.getElementById("pick");
-STOCKS.forEach(function(st,i){
-  pk.innerHTML+='<span class="pk" id="pk'+i+'" onclick="pick('+i+')">'+st[1]+'</span>';
+var groups=[
+  {n:"MLCC/氧化锆",c:"#ff4757",ids:[1,2,3]},
+  {n:"先进封装",c:"#ffa502",ids:[4,5,6,7,8]},
+  {n:"钨/战略金属",c:"#ff6b35",ids:[9,10]},
+  {n:"金刚石散热",c:"#1e90ff",ids:[0]},
+  {n:"算力供电/800V",c:"#2ed573",ids:[11,12,13]}
+];
+groups.forEach(function(g){
+  pk.innerHTML+='<div style="width:100%;font-size:10px;color:'+g.c+';margin:4px 0 2px 2px;font-weight:600">▸ '+g.n+'</div>';
+  g.ids.forEach(function(i){
+    pk.innerHTML+='<span class="pk" id="pk'+i+'" onclick="pick('+i+')">'+STOCKS[i][1]+'</span>';
+  });
 });
 
 function pick(idx){
