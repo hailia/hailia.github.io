@@ -96,16 +96,23 @@ D.concepts.forEach(function(c){
 
 // Click handler - use onclick in the HTML itself (safest approach)
 document.getElementById("tb").onclick=function(e){
-  var el=e.target;
-  while(el&&el!==this){
-    if(el.tagName==="TR"&&el.id&&el.id.indexOf("r_")===0){
+  var el=e.target||e.srcElement;
+  // Walk up to find TR
+  while(el && el.nodeName){
+    var tag=el.nodeName.toUpperCase();
+    if(tag==="TR" && el.id && el.id.substring(0,2)==="r_"){
+      // Highlight
+      var prev=document.querySelector("#tb tr.hl");
+      if(prev) prev.style.background="";
+      el.style.background="#1f6feb22";
+      el.classList.add("hl");
       var code=el.id.substring(2);
-      var b=el.getElementsByTagName("b")[0];
+      var b=el.querySelector("b");
       var name=b?b.textContent:"";
       openChart(code,name);
       return;
     }
-    el=el.parentElement;
+    el=el.parentNode;
   }
 };
 
