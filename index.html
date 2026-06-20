@@ -38,7 +38,7 @@ svg{display:block;width:100%;max-width:480px;margin:0 auto}
 </style>
 </head>
 <body>
-<div class="hdr"><h1>🤑 阿财看盘</h1><p id="subtitle"></p></div>
+<div class="hdr"><h1>🤑 阿财看盘</h1><p id="subtitle"></p><p style="font-size:9px;margin-top:1px"><span id="live-badge" style="color:#8b949e">休市</span> | 刷新 <span id="refresh-time">--:--:--</span></p></div>
 
 <div class="concepts" id="pick"></div>
 <div class="tab">
@@ -148,6 +148,71 @@ function st(t){
   document.getElementById("cf").style.display=t==="f"?"block":"none";
 }
 pick(0);
+// === 实时分时刷新 ===
+function isTrading(){
+  var n=new Date(),d=n.getDay(),h=n.getHours(),m=n.getMinutes();
+  if(d===0||d===6)return false;
+  var t=h*60+m;
+  return (t>=570&&t<=690)||(t>=780&&t<=900); // 9:30-11:30, 13:00-15:00
+}
+function fetchIntra(codeKey){
+  var x=new XMLHttpRequest();
+  x.open("GET","https://web.ifzq.gtimg.cn/appstock/app/minute/query?code="+codeKey+"&_="+Date.now(),true);
+  x.onload=function(){
+    if(x.status!==200)return;
+    try{
+      var d=JSON.parse(x.responseText);
+      var mins=d.data[codeKey].data.data;
+      var intra=[];
+      for(var i=0;i<mins.length;i++){
+        var p=mins[i].split(" ");
+        if(p.length>=3)intra.push([p[0],parseFloat(p[1]),parseFloat(p[2])]);
+      }
+      INTRA[codeKey]=intra;
+      // Re-render if this stock is currently selected
+      if(cur!==null&&STOCKS[cur][0]===codeKey&&document.getElementById("tf").className==="tb on"){
+        renderIntra(codeKey,intra);
+      }
+      document.getElementById("refresh-time").textContent=new Date().toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+    }catch(e){}
+  };
+  x.send();
+}
+function renderIntra(key,intra){
+  if(!intra||intra.length===0)return;
+  var ip=intra.map(function(r){return r[1]}),iv=intra.map(function(r){return r[2]});
+  var ihi=Math.max.apply(null,ip)*1.005,ilo=Math.min.apply(null,ip)*0.995,imxv=Math.max.apply(null,iv)||1;
+  var iW=460,iH=240,iPL=40,iPR=8,iPT=15,iPB=25,iCW=iW-iPL-iPR,iCH=iH-iPT-iPB,irg=ihi-ilo||1;
+  function ipx(i){return iPL+i*iCW/(ip.length-1)}
+  function ipy(p){return iPT+(ihi-p)/irg*iCH}
+  var is='<svg viewBox="0 0 '+iW+' '+(iH+55)+'" width="100%" style="max-width:480px"><rect width="'+iW+'" height="'+(iH+55)+'" fill="#0d1117"/>';
+  for(var i=0;i<=4;i++){var y=iPT+i*iCH/4;is+='<line x1="'+iPL+'" y1="'+y+'" x2="'+(iW-iPR)+'" y2="'+y+'" stroke="#21262d"/>';is+='<text x="'+(iPL-4)+'" y="'+(y+4)+'" text-anchor="end" font-size="8" fill="#8b949e">'+(ihi-i*irg/4).toFixed(2)+'</text>'}
+  var pd='';ip.forEach(function(p,i){pd+=(i?"L":"M")+ipx(i)+" "+ipy(p)});
+  is+='<path d="'+pd+' L'+ipx(ip.length-1)+" "+ipy(ilo)+" L"+iPL+" "+ipy(ilo)+' Z" fill="#58a6ff22"/>';
+  is+='<path d="'+pd+'" fill="none" stroke="#58a6ff" stroke-width="1.5"/>';
+  var avgP=ip.reduce(function(a,b){return a+b})/ip.length;
+  is+='<line x1="'+iPL+'" y1="'+ipy(avgP)+'" x2="'+(iW-iPR)+'" y2="'+ipy(avgP)+'" stroke="#ffa502" stroke-width="1" stroke-dasharray="5,3"/>';
+  intra.forEach(function(r,i){if(i%30===0||i===intra.length-1)is+='<text x="'+ipx(i)+'" y="'+(iH-6)+'" text-anchor="middle" font-size="7" fill="#8b949e">'+r[0]+'</text>'});
+  is+='<text x="'+(iW-iPR-8)+'" y="12" font-size="8" fill="#58a6ff">价</text><text x="'+(iW-iPR-32)+'" y="12" font-size="8" fill="#ffa502">均'+avgP.toFixed(2)+'</text>';
+  is+='<text x="'+iPL+'" y="'+(iH+12)+'" font-size="8" fill="#8b949e">量(手)</text>';
+  var iVH=48;
+  intra.forEach(function(r,i){var vh=r[2]/imxv*(iVH-6),bw=Math.max(0.5,iCW/intra.length*.8);is+='<rect x="'+(ipx(i)-bw/2)+'" y="'+(iH+10+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(i>0&&ip[i]>=ip[i-1]?"#3fb95088":"#f8514988")+'"/>'});
+  is+='</svg>';
+  document.getElementById("cf").innerHTML=is;
+}
+// Auto-refresh during trading
+setInterval(function(){
+  if(isTrading()&&cur!==null){
+    fetchIntra(STOCKS[cur][0]);
+  }
+  // Update badge
+  var badge=document.getElementById("live-badge");
+  if(badge){
+    if(isTrading()){badge.textContent="● 实时";badge.style.color="#3fb950"}
+    else{badge.textContent="休市";badge.style.color="#8b949e"}
+  }
+},30000);
+
 </script>
 </body>
 </html>
