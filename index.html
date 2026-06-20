@@ -50,13 +50,15 @@ var groups=[
   {n:"先进封装",c:"#ffa502",ids:[4,5,6,7,8]},
   {n:"钨/战略金属",c:"#ff6b35",ids:[9,10]},
   {n:"金刚石散热",c:"#1e90ff",ids:[0]},
-  {n:"算力供电/800V",c:"#2ed573",ids:[11,12,13]}
+  {n:"算力供电/800V HVDC",c:"#2ed573",ids:[11,12,13]}
 ];
-groups.forEach(function(g){
-  pk.innerHTML+='<div style="width:100%;font-size:10px;color:'+g.c+';margin:4px 0 2px 2px;font-weight:600">▸ '+g.n+'</div>';
-  g.ids.forEach(function(i){
-    pk.innerHTML+='<span class="pk" id="pk'+i+'" onclick="pick('+i+')">'+STOCKS[i][1]+'</span>';
+groups.forEach(function(g,i){
+  pk.innerHTML+='<div class="gbtn" id="g'+i+'" style="border-left:3px solid '+g.c+'" onclick="toggleG('+i+')">'+g.n+' <span class="garr">▶</span></div>';
+  pk.innerHTML+='<div class="gsub" id="gs'+i+'" style="display:none">';
+  g.ids.forEach(function(j){
+    pk.innerHTML+='<span class="pk" id="pk'+j+'" onclick="pick('+j+')">'+STOCKS[j][1]+'</span>';
   });
+  pk.innerHTML+='</div>';
 });
 
 function pick(idx){
@@ -129,6 +131,15 @@ function pick(idx){
   cur=idx;
 }
 
+var openG=-1;
+function toggleG(i){
+  var gs=document.getElementById("gs"+i);
+  if(openG===i){gs.style.display="none";document.getElementById("g"+i).querySelector(".garr").textContent="▶";openG=-1}
+  else{
+    if(openG>=0){document.getElementById("gs"+openG).style.display="none";document.getElementById("g"+openG).querySelector(".garr").textContent="▶"}
+    gs.style.display="block";document.getElementById("g"+i).querySelector(".garr").textContent="▼";openG=i
+  }
+}
 function st(t){
   document.getElementById("tk").className=t==="k"?"tb on":"tb";
   document.getElementById("tf").className=t==="f"?"tb on":"tb";
