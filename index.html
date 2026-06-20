@@ -146,7 +146,7 @@ groups.forEach(function(g,i){
     if(!kl)return;
     var cs=kl.map(function(r){return r[2]});
     var p=cs[cs.length-1];
-    var c5d=(p/cs[cs.length-5]-1)*100;
+    var prevC=cs.length>1?cs[cs.length-2]:p;var dChg=(p/prevC-1)*100;
     var ss=50;
     var m5=cs.slice(-5).reduce(function(a,b){return a+b})/5;
     var m10=cs.slice(-10).reduce(function(a,b){return a+b})/10;
@@ -154,7 +154,7 @@ groups.forEach(function(g,i){
     if(m5>m10&&m10>m20)ss=85;
     else if(m5>m10)ss=72;
     else if(p>m20)ss=60;
-    pk.innerHTML+='<div class="srow" id="sr'+j+'" onclick="toggleChart('+j+')"><span class="sn">'+nm+'</span><span class="slo">'+lo+'</span><span class="sc '+sc(ss)+'">'+ss+'</span><span class="sp">'+p.toFixed(2)+'</span><span class="sq '+c5(c5d)+'">'+(c5d>0?"+":"")+c5d.toFixed(1)+'%</span></div>';
+    pk.innerHTML+='<div class="srow" id="sr'+j+'" onclick="toggleChart('+j+')"><span class="sn">'+nm+'</span><span class="slo">'+lo+'</span><span class="sc '+sc(ss)+'">'+ss+'</span><span class="sp">'+p.toFixed(2)+'</span><span class="sq '+c5(dChg)+'">'+(c5d>0?"+":"")+dChg.toFixed(1)+'%</span></div>';
     pk.innerHTML+='<div class="chart-inline" id="ch'+j+'"><div class="tabs"><span class="on" id="tk'+j+'" onclick="event.stopPropagation();switchTab('+j+',\'k\')">日K</span><span id="tf'+j+'" onclick="event.stopPropagation();switchTab('+j+',\'f\')">分时</span></div><div class="stats" id="s'+j+'"></div><div id="ck'+j+'"></div><div id="cf'+j+'" style="display:none"></div></div>';
   });
   pk.innerHTML+='</div></div>';
