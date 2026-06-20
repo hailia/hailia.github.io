@@ -61,8 +61,10 @@ GR.forEach(function(g,gi){
 document.getElementById("pk").onclick=function(e){
   var el=e.target||e.srcElement;
   while(el&&el!==this){
-    var gi=el.getAttribute("data-gi");
-    if(gi!==null){tg(parseInt(gi));return;}
+    if(el.nodeType===1){
+      var gi=el.getAttribute("data-gi");
+      if(gi!==null){tg(parseInt(gi));return;}
+    }
     el=el.parentNode;
   }
 };
