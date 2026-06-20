@@ -162,9 +162,13 @@ groups.forEach(function(g,i){
 
 function toggleConcept(i){
   var cc=document.getElementById("cc"+i);if(!cc)return;
-  if(openConcept===i){cc.classList.remove("open");openConcept=-1}else{
-    if(openConcept>=0){var old=document.getElementById("cc"+openConcept);if(old)old.classList.remove("open");}
-    cc.classList.add("open");openConcept=i;
+  if(openConcept===i){
+    cc.className="cc";
+    openConcept=-1;
+  }else{
+    if(openConcept>=0){var old=document.getElementById("cc"+openConcept);if(old)old.className="cc";}
+    cc.className="cc open";
+    openConcept=i;
   }
 }
 
