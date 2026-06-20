@@ -95,18 +95,14 @@ D.concepts.forEach(function(c){
 });
 
 // Click handler - use onclick in the HTML itself (safest approach)
-setTimeout(function(){
-  var rows=document.querySelectorAll("#tb tr.sr");
-  for(var i=0;i<rows.length;i++){
-    (function(r){
-      r.onclick=function(){
-        var code=r.id.replace("r_","");
-        var name=r.querySelector("b").textContent;
-        openChart(code,name);
-      };
-    })(rows[i]);
-  }
-}, 100);
+document.getElementById("tb").onclick=function(e){
+  var tr=e.target;
+  while(tr&&tr.tagName!=="TR")tr=tr.parentElement;
+  if(!tr||!tr.id||!tr.id.startsWith("r_"))return;
+  var code=tr.id.replace("r_","");
+  var name=tr.querySelector("b").textContent;
+  openChart(code,name);
+};
 
 function openChart(code,name){
   var kl=KL[code];if(!kl)return;
