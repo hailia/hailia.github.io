@@ -221,6 +221,16 @@ function st(t){
   document.getElementById("tf").className=t==="f"?"tb on":"tb";
   document.getElementById("ck").style.display=t==="k"?"block":"none";
   document.getElementById("cf").style.display=t==="f"?"block":"none";
+  // When switching to intraday, check if data is now available
+  if(t==="f"&&cur!==null){
+    var key=STOCKS[cur][0];
+    var intra=INTRA[key];
+    if(intra&&intra.length>0){
+      renderIntra(key,intra);
+    }else{
+      fetchIntra(key);
+    }
+  }
 }
 pick(0);
 // === 实时分时刷新 ===
@@ -278,7 +288,9 @@ function fetchIntra(codeKey){
       }
       INTRA[codeKey]=intra;
       // Re-render if this stock is currently selected
-      if(cur!==null&&STOCKS[cur][0]===codeKey&&document.getElementById("tf").className==="tb on"){
+      if(cur!==null&&STOCKS[cur][0]===codeKey){
+        // Always store and render so it's ready when user switches tabs
+        document.getElementById("cf").innerHTML='<div style="text-align:center;padding:10px;color:#3fb950">✅ 分时数据已就绪</div>';
         renderIntra(codeKey,intra);
       }
       document.getElementById("refresh-time").textContent=new Date().toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
