@@ -192,26 +192,7 @@ function pick(idx){
   document.getElementById("ck").innerHTML=ks;
   var intra=(INTRA[key]||[]);
   if(intra.length>0){
-    var ip=intra.map(r=>r[1]),iv=intra.map(r=>r[2]);
-    var ihi=Math.max(...ip)*1.005,ilo=Math.min(...ip)*0.995;var imxv=0;for(var vi=0;vi<iv.length;vi++){var mv=vi>0?iv[vi]-(iv[vi-1]||0):iv[vi];if(mv>imxv)imxv=mv;}imxv=imxv||1;
-    var iW=460,iH=240,iPL=40,iPR=8,iPT=15,iPB=25,iCW=iW-iPL-iPR,iCH=iH-iPT-iPB,irg=ihi-ilo||1;
-    function ipx(i){return iPL+i*iCW/(ip.length-1)}
-    function ipy(p){return iPT+(ihi-p)/irg*iCH}
-    var is='<svg viewBox="0 0 '+iW+' '+(iH+55)+'" width="100%" style="max-width:480px"><rect width="'+iW+'" height="'+(iH+55)+'" fill="#0d1117"/>';
-    for(var i=0;i<=4;i++){var y=iPT+i*iCH/4;is+='<line x1="'+iPL+'" y1="'+y+'" x2="'+(iW-iPR)+'" y2="'+y+'" stroke="#21262d"/>';is+='<text x="'+(iPL-4)+'" y="'+(y+4)+'" text-anchor="end" font-size="8" fill="#8b949e">'+(ihi-i*irg/4).toFixed(2)+'</text>'}
-    var pd='';ip.forEach((p,i)=>{pd+=(i?'L':'M')+ipx(i)+' '+ipy(p)});
-    is+='<path d="'+pd+' L'+ipx(ip.length-1)+' '+ipy(ilo)+' L'+iPL+' '+ipy(ilo)+' Z" fill="#58a6ff22"/>';
-    is+='<path d="'+pd+'" fill="none" stroke="#58a6ff" stroke-width="1.5"/>';
-    var avgP=ip.reduce((a,b)=>a+b)/ip.length;
-    is+='<line x1="'+iPL+'" y1="'+ipy(avgP)+'" x2="'+(iW-iPR)+'" y2="'+ipy(avgP)+'" stroke="#ffa502" stroke-width="1" stroke-dasharray="5,3"/>';
-    intra.forEach((r,i)=>{if(i%30===0||i===intra.length-1)is+='<text x="'+ipx(i)+'" y="'+(iH-6)+'" text-anchor="middle" font-size="7" fill="#8b949e">'+r[0]+'</text>'});
-    is+='<text x="'+(iW-iPR-8)+'" y="12" font-size="8" fill="#58a6ff">价</text><text x="'+(iW-iPR-32)+'" y="12" font-size="8" fill="#ffa502">均'+avgP.toFixed(2)+'</text>';
-    var iVH=48;
-    is+='<text x="'+iPL+'" y="'+(iH+12)+'" font-size="8" fill="#8b949e">量(手)</text>';
-    intra.forEach((r,i)=>{var mv=(i>0?r[2]-(intra[i-1]?intra[i-1][2]:0):r[2]);var vh=(mv||1)/imxv*(iVH-6),bw=Math.max(0.5,iCW/intra.length*.8);is+='<rect x="'+(ipx(i)-bw/2)+'" y="'+(iH+10+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(i>0&&ip[i]>=ip[i-1]?'#f8514988':'#3fb95088')+'"/>'});
-    is+='</svg>';
-    document.getElementById("cf").innerHTML=is;
-  }else{
+    renderIntra(key,intra);}else{
     document.getElementById("cf").innerHTML='<div style="text-align:center;padding:50px;color:#8b949e">⏸ 正在加载分时...点击其他票试试</div>';
     setTimeout(function(){fetchIntra(key)},500);
   }
@@ -308,24 +289,53 @@ function fetchIntra(codeKey){
 function renderIntra(key,intra){
   if(!intra||intra.length===0)return;
   var ip=intra.map(function(r){return r[1]}),iv=intra.map(function(r){return r[2]});
-  var ihi=Math.max.apply(null,ip)*1.005,ilo=Math.min.apply(null,ip)*0.995,imxv=Math.max.apply(null,iv)||1;
-  var iW=460,iH=240,iPL=40,iPR=8,iPT=15,iPB=25,iCW=iW-iPL-iPR,iCH=iH-iPT-iPB,irg=ihi-ilo||1;
+  // 昨收 from KL data
+  var prevClose=0;
+  var kl=KL[key];if(kl&&kl.length>1){prevClose=kl[kl.length-2][2];}
+  var openP=ip[0],lastP=ip[ip.length-1];
+  var chgPct=prevClose?((lastP-prevClose)/prevClose*100):0;
+  var chgStr=(chgPct>=0?"+":"")+chgPct.toFixed(2)+"%";
+  var chgColor=chgPct>=0?"#f85149":"#3fb950";
+  var ihi=Math.max.apply(null,ip)*1.005,ilo=Math.min.apply(null,ip)*0.995;
+  // Include prevClose in range
+  if(prevClose>0){ihi=Math.max(ihi,prevClose*1.005);ilo=Math.min(ilo,prevClose*0.995);}
+  var imxv=0;for(var vi=0;vi<iv.length;vi++){var mv=vi>0?iv[vi]-(iv[vi-1]||0):iv[vi];if(mv>imxv)imxv=mv;}imxv=imxv||1;
+  var iW=460,iH=240,iPL=40,iPR=8,iPT=18,iPB=28,iCW=iW-iPL-iPR,iCH=iH-iPT-iPB,irg=ihi-ilo||1;
   function ipx(i){return iPL+i*iCW/(ip.length-1)}
   function ipy(p){return iPT+(ihi-p)/irg*iCH}
   var is='<svg viewBox="0 0 '+iW+' '+(iH+55)+'" width="100%" style="max-width:480px"><rect width="'+iW+'" height="'+(iH+55)+'" fill="#0d1117"/>';
+  // Grid + price labels
   for(var i=0;i<=4;i++){var y=iPT+i*iCH/4;is+='<line x1="'+iPL+'" y1="'+y+'" x2="'+(iW-iPR)+'" y2="'+y+'" stroke="#21262d"/>';is+='<text x="'+(iPL-4)+'" y="'+(y+4)+'" text-anchor="end" font-size="8" fill="#8b949e">'+(ihi-i*irg/4).toFixed(2)+'</text>'}
+  // Previous close line
+  if(prevClose>0){is+='<line x1="'+iPL+'" y1="'+ipy(prevClose)+'" x2="'+(iW-iPR)+'" y2="'+ipy(prevClose)+'" stroke="#8b949e" stroke-width="1" stroke-dasharray="2,4"/>';is+='<text x="'+(iPL-4)+'" y="'+(ipy(prevClose)+3)+'" text-anchor="end" font-size="7" fill="#8b949e">'+prevClose.toFixed(2)+'</text>';}
+  // Price area + line
   var pd='';ip.forEach(function(p,i){pd+=(i?"L":"M")+ipx(i)+" "+ipy(p)});
   is+='<path d="'+pd+' L'+ipx(ip.length-1)+" "+ipy(ilo)+" L"+iPL+" "+ipy(ilo)+' Z" fill="#58a6ff22"/>';
   is+='<path d="'+pd+'" fill="none" stroke="#58a6ff" stroke-width="1.5"/>';
+  // Average price line - thicker, more visible
   var avgP=ip.reduce(function(a,b){return a+b})/ip.length;
-  is+='<line x1="'+iPL+'" y1="'+ipy(avgP)+'" x2="'+(iW-iPR)+'" y2="'+ipy(avgP)+'" stroke="#ffa502" stroke-width="1" stroke-dasharray="5,3"/>';
-  intra.forEach(function(r,i){if(i%30===0||i===intra.length-1)is+='<text x="'+ipx(i)+'" y="'+(iH-6)+'" text-anchor="middle" font-size="7" fill="#8b949e">'+r[0]+'</text>'});
-  is+='<text x="'+(iW-iPR-8)+'" y="12" font-size="8" fill="#58a6ff">价</text><text x="'+(iW-iPR-32)+'" y="12" font-size="8" fill="#ffa502">均'+avgP.toFixed(2)+'</text>';
+  is+='<line x1="'+iPL+'" y1="'+ipy(avgP)+'" x2="'+(iW-iPR)+'" y2="'+ipy(avgP)+'" stroke="#ffa502" stroke-width="1.5" stroke-dasharray="6,2"/>';
+  // Time labels
+  intra.forEach(function(r,i){if(i%30===0||i===intra.length-1)is+='<text x="'+ipx(i)+'" y="'+(iH-8)+'" text-anchor="middle" font-size="7" fill="#8b949e">'+r[0]+'</text>'});
+  // Legend + 涨幅
+  is+='<text x="'+iPL+'" y="12" font-size="11" font-weight="700" fill="'+chgColor+'">'+chgStr+'</text>';
+  is+='<text x="'+(iPL+50)+'" y="12" font-size="8" fill="#58a6ff">价'+lastP.toFixed(2)+'</text>';
+  is+='<text x="'+(iPL+105)+'" y="12" font-size="8" fill="#ffa502">均'+avgP.toFixed(2)+'</text>';
+  if(prevClose>0){is+='<text x="'+(iPL+165)+'" y="12" font-size="8" fill="#8b949e">昨收'+prevClose.toFixed(2)+'</text>';}
+  // Volume
   is+='<text x="'+iPL+'" y="'+(iH+12)+'" font-size="8" fill="#8b949e">量(手)</text>';
   var iVH=48;
-  intra.forEach(function(r,i){var mv=(i>0?r[2]-(intra[i-1]?intra[i-1][2]:0):r[2]);var vh=(mv||1)/imxv*(iVH-6),bw=Math.max(0.5,iCW/intra.length*.8);is+='<rect x="'+(ipx(i)-bw/2)+'" y="'+(iH+10+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(i>0&&ip[i]>=ip[i-1]?"#3fb95088":"#f8514988")+'"/>'});
+  intra.forEach(function(r,i){var mv=(i>0?r[2]-(intra[i-1]?intra[i-1][2]:0):r[2]);var vh=(mv||1)/imxv*(iVH-6),bw=Math.max(0.5,iCW/intra.length*.8);is+='<rect x="'+(ipx(i)-bw/2)+'" y="'+(iH+10+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(i>0&&ip[i]>=ip[i-1]?"#f8514988":"#3fb95088")+'"/>'});
   is+='</svg>';
+  // Also update stats cards with live data
   document.getElementById("cf").innerHTML=is;
+  document.getElementById("s").innerHTML=
+  '<div class="st"><div class="v" style="color:#f85149">'+lastP.toFixed(2)+'</div><div class="l">现价</div></div>'+
+  '<div class="st"><div class="v" style="color:'+chgColor+'">'+chgStr+'</div><div class="l">涨幅</div></div>'+
+  '<div class="st"><div class="v">'+avgP.toFixed(2)+'</div><div class="l">均价</div></div>'+
+  '<div class="st"><div class="v">'+openP.toFixed(2)+'</div><div class="l">开盘</div></div>'+
+  '<div class="st"><div class="v">'+(prevClose?prevClose.toFixed(2):"-")+'</div><div class="l">昨收</div></div>'+
+  '<div class="st"><div class="v">'+(imxv/10000).toFixed(1)+'万</div><div class="l">峰值量</div></div>';
 }
 // Auto-refresh during trading
 setInterval(function(){
