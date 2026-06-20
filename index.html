@@ -92,11 +92,11 @@ function pick(idx){
   var c5=(p/cs[cs.length-5]-1)*100,c20=(p/cs[cs.length-20]-1)*100;
   document.getElementById("s").innerHTML=
   '<div class="st"><div class="v" style="color:#3fb950">'+p.toFixed(2)+'</div><div class="l">现价</div></div>'+
-  '<div class="st"><div class="v" style="color:'+(c5>0?'#3fb950':'#f85149')+'">'+(c5>0?'+':'')+c5.toFixed(1)+'%</div><div class="l">5日</div></div>'+
+  '<div class="st"><div class="v" style="color:'+(c5>0?'#f85149':'#3fb950')+'">'+(c5>0?'+':'')+c5.toFixed(1)+'%</div><div class="l">5日</div></div>'+
   '<div class="st"><div class="v">'+m5.toFixed(2)+'</div><div class="l">MA5</div></div>'+
   '<div class="st"><div class="v">'+m10.toFixed(2)+'</div><div class="l">MA10</div></div>'+
   '<div class="st"><div class="v">'+m20.toFixed(2)+'</div><div class="l">MA20</div></div>'+
-  '<div class="st"><div class="v" style="color:'+(c20>0?'#3fb950':'#f85149')+'">'+(c20>0?'+':'')+c20.toFixed(1)+'%</div><div class="l">20日</div></div>';
+  '<div class="st"><div class="v" style="color:'+(c20>0?'#f85149':'#3fb950')+'">'+(c20>0?'+':'')+c20.toFixed(1)+'%</div><div class="l">20日</div></div>';
   function ma(a,n){var s=0,c=0;for(var i=Math.max(0,a.length-n);i<a.length;i++){s+=a[i];c++}return c?s/c:0}
   var ma5=[],ma10=[],ma20=[];
   for(var i=0;i<cs.length;i++){ma5.push(ma(cs.slice(0,i+1),5));ma10.push(ma(cs.slice(0,i+1),10));ma20.push(ma(cs.slice(0,i+1),20))}
@@ -107,13 +107,13 @@ function pick(idx){
   function py(p){return PT+(hi-p)/rg*CH}
   var ks='<svg viewBox="0 0 '+W+' '+(H+55)+'" width="100%" style="max-width:480px"><rect width="'+W+'" height="'+(H+55)+'" fill="#0d1117"/>';
   for(var i=0;i<=4;i++){var y=PT+i*CH/4;ks+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#21262d"/>';ks+='<text x="'+(PL-5)+'" y="'+(y+4)+'" text-anchor="end" font-size="9" fill="#8b949e">'+(hi-i*rg/4).toFixed(1)+'</text>'}
-  kl.forEach((r,i)=>{var x=px(i),o=py(r[1]),c=py(r[2]),h=py(r[3]),l=py(r[4]);var cl=r[2]>=r[1]?'#3fb950':'#f85149';ks+='<line x1="'+x+'" y1="'+h+'" x2="'+x+'" y2="'+l+'" stroke="'+cl+'"/>';var bw=Math.max(1.5,CW/kl.length*.75),bh=Math.abs(c-o)||1;ks+='<rect x="'+(x-bw/2)+'" y="'+Math.min(c,o)+'" width="'+bw+'" height="'+bh+'" fill="'+cl+'"/>';if(i%5===0)ks+='<text x="'+x+'" y="'+(H-6)+'" text-anchor="middle" font-size="8" fill="#8b949e">'+r[0]+'</text>'});
+  kl.forEach((r,i)=>{var x=px(i),o=py(r[1]),c=py(r[2]),h=py(r[3]),l=py(r[4]);var cl=r[2]>=r[1]?'#f85149':'#3fb950';ks+='<line x1="'+x+'" y1="'+h+'" x2="'+x+'" y2="'+l+'" stroke="'+cl+'"/>';var bw=Math.max(1.5,CW/kl.length*.75),bh=Math.abs(c-o)||1;ks+='<rect x="'+(x-bw/2)+'" y="'+Math.min(c,o)+'" width="'+bw+'" height="'+bh+'" fill="'+cl+'"/>';if(i%5===0)ks+='<text x="'+x+'" y="'+(H-6)+'" text-anchor="middle" font-size="8" fill="#8b949e">'+r[0]+'</text>'});
   function dm(v,c){var d='';v.forEach((p,i)=>{if(p>0)d+=(d?'L':'M')+px(i)+' '+py(p)});if(d)ks+='<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="1.2"/>'}
   dm(ma5,'#ff6b35');dm(ma10,'#ffa502');dm(ma20,'#1e90ff');
   ks+='<text x="'+(W-PR-10)+'" y="14" font-size="9" fill="#ff6b35">MA5</text><text x="'+(W-PR-50)+'" y="14" font-size="9" fill="#ffa502">MA10</text><text x="'+(W-PR-90)+'" y="14" font-size="9" fill="#1e90ff">MA20</text>';
   ks+='<text x="'+PL+'" y="'+(H+12)+'" font-size="8" fill="#8b949e">量(手)</text>';
   var VH=48;mxv=mxv||1;
-  kl.forEach((r,i)=>{var vh=r[5]/mxv*(VH-8),bw=Math.max(1.5,CW/kl.length*.75);ks+='<rect x="'+(px(i)-bw/2)+'" y="'+(H+10+VH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(r[2]>=r[1]?'#3fb95044':'#f8514944')+'"/>'});
+  kl.forEach((r,i)=>{var vh=r[5]/mxv*(VH-8),bw=Math.max(1.5,CW/kl.length*.75);ks+='<rect x="'+(px(i)-bw/2)+'" y="'+(H+10+VH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(r[2]>=r[1]?'#f8514944':'#3fb95044')+'"/>'});
   ks+='</svg>';
   document.getElementById("ck").innerHTML=ks;
   var intra=INTRA[key]||[];
@@ -134,7 +134,7 @@ function pick(idx){
     is+='<text x="'+(iW-iPR-8)+'" y="12" font-size="8" fill="#58a6ff">价</text><text x="'+(iW-iPR-32)+'" y="12" font-size="8" fill="#ffa502">均'+avgP.toFixed(2)+'</text>';
     var iVH=48;
     is+='<text x="'+iPL+'" y="'+(iH+12)+'" font-size="8" fill="#8b949e">量(手)</text>';
-    intra.forEach((r,i)=>{var vh=r[2]/imxv*(iVH-6),bw=Math.max(0.5,iCW/intra.length*.8);is+='<rect x="'+(ipx(i)-bw/2)+'" y="'+(iH+10+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(i>0&&ip[i]>=ip[i-1]?'#3fb95088':'#f8514988')+'"/>'});
+    intra.forEach((r,i)=>{var vh=r[2]/imxv*(iVH-6),bw=Math.max(0.5,iCW/intra.length*.8);is+='<rect x="'+(ipx(i)-bw/2)+'" y="'+(iH+10+iVH-vh)+'" width="'+bw+'" height="'+vh+'" fill="'+(i>0&&ip[i]>=ip[i-1]?'#f8514988':'#3fb95088')+'"/>'});
     is+='</svg>';
     document.getElementById("cf").innerHTML=is;
   }else{
