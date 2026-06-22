@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>板块风向标</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a0f;color:#c9d1d9;font-size:12px;padding:8px;min-height:100vh}
+.hdr{text-align:center;padding:12px 0 8px}
+.hdr h1{font-size:18px;background:linear-gradient(135deg,#58a6ff,#bc8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hdr .sub{font-size:10px;color:#6e7681;margin-top:4px}
+.layout{display:grid;grid-template-columns:1fr 360px;gap:8px;max-width:1200px;margin:0 auto}
+.tbl{background:#12121a;border-radius:10px;overflow:hidden}
+.tbl-hd{display:flex;align-items:center;padding:10px 14px;font-size:11px;color:#8b949e;border-bottom:1px solid #1c1c2a;font-weight:600;gap:4px}
+.tbl-row{display:flex;align-items:center;padding:8px 14px;border-bottom:1px solid #15151f;cursor:pointer;transition:background .15s}
+.tbl-row:hover{background:#181828}
+.tbl-row .r{width:20px;color:#484f58;font-size:10px;text-align:center}
+.tbl-row .bar{width:3px;height:14px;border-radius:2px;flex-shrink:0;margin-right:6px}
+.tbl-row .name{flex:1;font-weight:500}
+.tbl-row .cnt{font-size:10px;color:#484f58;min-width:32px;text-align:center}
+.tbl-row .chg{min-width:60px;text-align:right;font-weight:600}
+.tbl-row .vol{min-width:70px;text-align:right;font-size:11px;color:#8b949e}
+.tbl-row .top{min-width:60px;text-align:right;font-size:10px;color:#8b949e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.up{color:#f85149}.dn{color:#3fb950}
+.pie{background:#12121a;border-radius:10px;padding:2px;display:flex;flex-direction:column}
+.pie-box{flex:1;min-height:380px}
+.chart-box{width:100%;height:100%}
+.detail{display:none;padding:6px 14px 10px 20px;background:#0c0c14;border-top:1px solid #1c1c2a}
+.detail.open{display:block}
+.detail .ds{display:flex;align-items:center;padding:4px 0;font-size:11px;gap:6px}
+.detail .ds .dnm{flex:1}
+.detail .ds .dchg{min-width:56px;text-align:right;font-weight:600}
+.tabs{display:flex;gap:8px;margin-bottom:8px;padding:0 14px}
+.tab{padding:4px 0;font-size:11px;cursor:pointer;color:#6e7681;border-bottom:2px solid transparent}
+.tab.act{color:#58a6ff;border-bottom-color:#58a6ff}
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr}
+  .pie{min-height:320px}
+}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>📊 板块风向标</h1>
+  <div class="sub">06-23 更新 · 共 19 个板块</div>
+</div>
+<div class="layout">
+  <div class="tbl">
+    <div class="tabs" id="tabs">
+      <div class="tab act" onclick="sortBy('chg')">📈 涨幅排序</div>
+      <div class="tab" onclick="sortBy('vol')">💰 成交额排序</div>
+    </div>
+    <div class="tbl-hd"><span class="r">#</span><span class="bar" style="visibility:hidden"></span><span class="name">板块</span><span class="cnt">只</span><span class="chg">涨幅</span><span class="vol">成交额(亿)</span><span class="top">领涨</span></div>
+    <div id="tbl-body"></div>
+  </div>
+  <div class="pie">
+    <div class="tbl-hd" style="justify-content:center">🍩 成交额分布</div>
+    <div class="pie-box"><div class="chart-box" id="pie-chart"></div></div>
+  </div>
+</div>
+<script>
+var DATA=[{"name": "⚪ 金刚石散热", "color": "#abb2bf", "avg_chg": 11.7, "total_vol": 532, "total_amt": 1.36, "count": 4, "up_count": 4, "limit_up": 3, "stocks": [{"code": "300179", "name": "四方达", "chg": 20.0, "vol": 108, "amt": 0.62}, {"code": "002297", "name": "博云新材", "chg": 10.01, "vol": 39, "amt": 0.12}, {"code": "600172", "name": "黄河旋风", "chg": 9.99, "vol": 154, "amt": 0.24}, {"code": "002171", "name": "楚江新材", "chg": 6.83, "vol": 231, "amt": 0.38}]}, {"name": "🔵 铟/战略金属", "color": "#528bff", "avg_chg": 10.0, "total_vol": 897, "total_amt": 1.64, "count": 6, "up_count": 6, "limit_up": 6, "stocks": [{"code": "000751", "name": "锌业股份", "chg": 10.1, "vol": 32, "amt": 0.02}, {"code": "600497", "name": "驰宏锌锗", "chg": 10.02, "vol": 260, "amt": 0.29}, {"code": "002428", "name": "云南锗业", "chg": 10.0, "vol": 35, "amt": 0.39}, {"code": "000960", "name": "锡业股份", "chg": 9.99, "vol": 105, "amt": 0.48}, {"code": "600961", "name": "株冶集团", "chg": 9.99, "vol": 21, "amt": 0.07}, {"code": "000060", "name": "中金岭南", "chg": 9.99, "vol": 444, "amt": 0.39}]}, {"name": "🟣 氧化锆粉体", "color": "#ff4757", "avg_chg": 9.8, "total_vol": 469, "total_amt": 2.69, "count": 4, "up_count": 4, "limit_up": 3, "stocks": [{"code": "300285", "name": "国瓷材料", "chg": 10.47, "vol": 144, "amt": 1.42}, {"code": "603663", "name": "三祥新材", "chg": 10.0, "vol": 26, "amt": 0.25}, {"code": "002167", "name": "东方锆业", "chg": 9.98, "vol": 5, "amt": 0.01}, {"code": "600392", "name": "盛和资源", "chg": 8.91, "vol": 294, "amt": 1.01}]}, {"name": "🟡 钨钼/战略金属", "color": "#e5c07b", "avg_chg": 9.8, "total_vol": 637, "total_amt": 3.6, "count": 5, "up_count": 5, "limit_up": 4, "stocks": [{"code": "600549", "name": "厦门钨业", "chg": 10.0, "vol": 108, "amt": 1.02}, {"code": "000657", "name": "中钨高新", "chg": 10.0, "vol": 83, "amt": 0.9}, {"code": "002842", "name": "翔鹭钨业", "chg": 10.0, "vol": 76, "amt": 0.4}, {"code": "601958", "name": "金钼股份", "chg": 10.0, "vol": 217, "amt": 0.66}, {"code": "002378", "name": "章源钨业", "chg": 9.19, "vol": 153, "amt": 0.62}]}, {"name": "🟦 六氟化钨", "color": "#569cd6", "avg_chg": 9.8, "total_vol": 3494, "total_amt": 104.65, "count": 4, "up_count": 4, "limit_up": 1, "stocks": [{"code": "688268", "name": "华特气体", "chg": 16.3, "vol": 1614, "amt": 35.36}, {"code": "002971", "name": "和远气体", "chg": 8.01, "vol": 29, "amt": 0.21}, {"code": "600378", "name": "昊华科技", "chg": 7.77, "vol": 97, "amt": 0.68}, {"code": "688146", "name": "中船特气", "chg": 7.14, "vol": 1754, "amt": 68.4}]}, {"name": "🌐 光纤/通信", "color": "#61afef", "avg_chg": 7.6, "total_vol": 478, "total_amt": 4.69, "count": 4, "up_count": 4, "limit_up": 2, "stocks": [{"code": "601869", "name": "长飞光纤", "chg": 10.0, "vol": 8, "amt": 0.41}, {"code": "600498", "name": "烽火通信", "chg": 9.63, "vol": 143, "amt": 1.18}, {"code": "600487", "name": "亨通光电", "chg": 8.22, "vol": 181, "amt": 2.17}, {"code": "600105", "name": "永鼎股份", "chg": 2.54, "vol": 146, "amt": 0.93}]}, {"name": "🔶 HBM/存储芯片", "color": "#ffa502", "avg_chg": 7.0, "total_vol": 1666, "total_amt": 10.2, "count": 6, "up_count": 6, "limit_up": 2, "stocks": [{"code": "600584", "name": "长电科技", "chg": 10.0, "vol": 237, "amt": 2.16}, {"code": "603986", "name": "兆易创新", "chg": 9.65, "vol": 52, "amt": 3.59}, {"code": "600667", "name": "太极实业", "chg": 7.89, "vol": 415, "amt": 0.94}, {"code": "000021", "name": "深科技", "chg": 5.99, "vol": 192, "amt": 0.9}, {"code": "002156", "name": "通富微电", "chg": 4.37, "vol": 205, "amt": 1.46}, {"code": "002185", "name": "华天科技", "chg": 4.23, "vol": 565, "amt": 1.15}]}, {"name": "⬛ 碳化硅SiC", "color": "#e06c75", "avg_chg": 6.4, "total_vol": 871, "total_amt": 2.01, "count": 5, "up_count": 5, "limit_up": 1, "stocks": [{"code": "600703", "name": "三安光电", "chg": 9.98, "vol": 372, "amt": 0.72}, {"code": "600460", "name": "士兰微", "chg": 7.1, "vol": 184, "amt": 0.82}, {"code": "002617", "name": "露笑科技", "chg": 6.44, "vol": 302, "amt": 0.29}, {"code": "603595", "name": "东尼电子", "chg": 5.01, "vol": 0, "amt": 0.0}, {"code": "603290", "name": "斯达半导", "chg": 3.58, "vol": 13, "amt": 0.18}]}, {"name": "⬛ 半导体材料", "color": "#f85149", "avg_chg": 6.3, "total_vol": 485, "total_amt": 4.05, "count": 9, "up_count": 7, "limit_up": 5, "stocks": [{"code": "605020", "name": "永和股份", "chg": 10.01, "vol": 62, "amt": 0.23}, {"code": "002409", "name": "雅克科技", "chg": 10.0, "vol": 34, "amt": 0.56}, {"code": "600160", "name": "巨化股份", "chg": 10.0, "vol": 125, "amt": 0.61}, {"code": "003031", "name": "中瓷电子", "chg": 10.0, "vol": 8, "amt": 0.16}, {"code": "600353", "name": "旭光电子", "chg": 10.0, "vol": 6, "amt": 0.03}, {"code": "300346", "name": "南大光电", "chg": 9.09, "vol": 103, "amt": 0.73}, {"code": "603501", "name": "韦尔股份", "chg": 0.66, "vol": 22, "amt": 0.2}, {"code": "300666", "name": "江丰电子", "chg": -0.79, "vol": 28, "amt": 0.86}, {"code": "605358", "name": "立昂微", "chg": -2.12, "vol": 97, "amt": 0.67}]}, {"name": "🟤 钽电容", "color": "#d55fde", "avg_chg": 5.3, "total_vol": 240, "total_amt": 1.08, "count": 3, "up_count": 3, "limit_up": 1, "stocks": [{"code": "000962", "name": "东方钽业", "chg": 10.0, "vol": 31, "amt": 0.21}, {"code": "600330", "name": "天通股份", "chg": 4.81, "vol": 180, "amt": 0.62}, {"code": "300726", "name": "宏达电子", "chg": 1.14, "vol": 29, "amt": 0.25}]}, {"name": "🟩 氮化镓GaN", "color": "#56b6c2", "avg_chg": 5.3, "total_vol": 183, "total_amt": 0.7, "count": 3, "up_count": 3, "limit_up": 1, "stocks": [{"code": "600206", "name": "有研新材", "chg": 10.0, "vol": 77, "amt": 0.36}, {"code": "002023", "name": "海特高新", "chg": 5.4, "vol": 74, "amt": 0.1}, {"code": "605111", "name": "新洁能", "chg": 0.36, "vol": 32, "amt": 0.24}]}, {"name": "🟢 稀土永磁", "color": "#7ec87b", "avg_chg": 3.9, "total_vol": 524, "total_amt": 2.36, "count": 4, "up_count": 4, "limit_up": 0, "stocks": [{"code": "000831", "name": "中国稀土", "chg": 7.11, "vol": 100, "amt": 0.66}, {"code": "600111", "name": "北方稀土", "chg": 5.35, "vol": 246, "amt": 1.33}, {"code": "300748", "name": "金力永磁", "chg": 2.87, "vol": 56, "amt": 0.19}, {"code": "000970", "name": "中科三环", "chg": 0.27, "vol": 122, "amt": 0.18}]}, {"name": "⚡ 算力供电", "color": "#ffa502", "avg_chg": 3.5, "total_vol": 207, "total_amt": 1.75, "count": 4, "up_count": 3, "limit_up": 1, "stocks": [{"code": "603629", "name": "利通电子", "chg": 10.0, "vol": 35, "amt": 0.68}, {"code": "002837", "name": "英维克", "chg": 3.94, "vol": 86, "amt": 0.66}, {"code": "002335", "name": "科华数据", "chg": 1.75, "vol": 35, "amt": 0.14}, {"code": "002364", "name": "中恒电气", "chg": -1.72, "vol": 51, "amt": 0.27}]}, {"name": "🔧 半导体设备", "color": "#c678dd", "avg_chg": 3.4, "total_vol": 7394, "total_amt": 266.09, "count": 11, "up_count": 9, "limit_up": 0, "stocks": [{"code": "688200", "name": "华峰测控", "chg": 8.77, "vol": 721, "amt": 29.41}, {"code": "600641", "name": "万业企业", "chg": 7.65, "vol": 98, "amt": 0.35}, {"code": "688361", "name": "中科飞测", "chg": 6.49, "vol": 1003, "amt": 26.94}, {"code": "603690", "name": "至纯科技", "chg": 5.15, "vol": 44, "amt": 0.14}, {"code": "688120", "name": "华海清科", "chg": 3.63, "vol": 1667, "amt": 39.19}, {"code": "688012", "name": "中微公司", "chg": 3.54, "vol": 2833, "amt": 105.6}, {"code": "002371", "name": "北方华创", "chg": 3.32, "vol": 10, "amt": 0.74}, {"code": "688072", "name": "拓荆科技", "chg": 1.91, "vol": 829, "amt": 62.01}, {"code": "603005", "name": "晶方科技", "chg": 1.79, "vol": 99, "amt": 0.46}, {"code": "002008", "name": "大族激光", "chg": -2.2, "vol": 87, "amt": 1.15}, {"code": "603061", "name": "金海通", "chg": -3.14, "vol": 3, "amt": 0.1}]}, {"name": "🧵 玻纤/电子布", "color": "#98c379", "avg_chg": 3.3, "total_vol": 403, "total_amt": 2.53, "count": 4, "up_count": 3, "limit_up": 0, "stocks": [{"code": "600176", "name": "中国巨石", "chg": 9.12, "vol": 209, "amt": 1.22}, {"code": "002080", "name": "中材科技", "chg": 4.68, "vol": 74, "amt": 0.62}, {"code": "603256", "name": "宏和科技", "chg": 2.02, "vol": 17, "amt": 0.45}, {"code": "605006", "name": "山东玻纤", "chg": -2.48, "vol": 103, "amt": 0.24}]}, {"name": "🟠 铝电容/铝箔", "color": "#d19a66", "avg_chg": 2.6, "total_vol": 359, "total_amt": 1.7, "count": 6, "up_count": 3, "limit_up": 1, "stocks": [{"code": "603989", "name": "艾华集团", "chg": 10.0, "vol": 32, "amt": 0.15}, {"code": "600888", "name": "新疆众和", "chg": 8.75, "vol": 152, "amt": 0.22}, {"code": "600563", "name": "法拉电子", "chg": 2.82, "vol": 12, "amt": 0.21}, {"code": "603115", "name": "海星股份", "chg": -0.19, "vol": 11, "amt": 0.13}, {"code": "002484", "name": "江海股份", "chg": -2.83, "vol": 65, "amt": 0.68}, {"code": "600673", "name": "东阳光", "chg": -3.2, "vol": 87, "amt": 0.31}]}, {"name": "💎 玻璃基板", "color": "#61afef", "avg_chg": 2.6, "total_vol": 4490, "total_amt": 3.97, "count": 6, "up_count": 5, "limit_up": 0, "stocks": [{"code": "002106", "name": "莱宝高科", "chg": 7.68, "vol": 95, "amt": 0.14}, {"code": "600707", "name": "彩虹股份", "chg": 5.89, "vol": 268, "amt": 0.33}, {"code": "000725", "name": "京东方A", "chg": 5.8, "vol": 3672, "amt": 2.54}, {"code": "603773", "name": "沃格光电", "chg": 4.44, "vol": 30, "amt": 0.52}, {"code": "300088", "name": "长信科技", "chg": 0.19, "vol": 402, "amt": 0.42}, {"code": "600876", "name": "凯盛科技", "chg": -8.16, "vol": 23, "amt": 0.02}]}, {"name": "💠 CCL覆铜板", "color": "#56b6c2", "avg_chg": 0.8, "total_vol": 950, "total_amt": 9.39, "count": 10, "up_count": 5, "limit_up": 0, "stocks": [{"code": "002636", "name": "金安国纪", "chg": 9.4, "vol": 29, "amt": 0.33}, {"code": "605589", "name": "圣泉集团", "chg": 5.3, "vol": 85, "amt": 0.62}, {"code": "603186", "name": "华正新材", "chg": 4.65, "vol": 19, "amt": 0.47}, {"code": "002916", "name": "深南电路", "chg": 0.78, "vol": 17, "amt": 0.78}, {"code": "600183", "name": "生益科技", "chg": 0.34, "vol": 94, "amt": 1.73}, {"code": "002384", "name": "东山精密", "chg": -0.9, "vol": 90, "amt": 2.43}, {"code": "002815", "name": "崇达技术", "chg": -1.32, "vol": 92, "amt": 0.18}, {"code": "002463", "name": "沪电股份", "chg": -1.78, "vol": 90, "amt": 1.31}, {"code": "600110", "name": "诺德股份", "chg": -2.39, "vol": 351, "amt": 0.6}, {"code": "002938", "name": "鹏鼎控股", "chg": -5.77, "vol": 83, "amt": 0.94}]}, {"name": "🔴 MLCC被动元件", "color": "#e06c75", "avg_chg": -0.6, "total_vol": 321, "total_amt": 2.18, "count": 5, "up_count": 1, "limit_up": 0, "stocks": [{"code": "603738", "name": "泰晶科技", "chg": 4.67, "vol": 54, "amt": 0.33}, {"code": "000733", "name": "振华科技", "chg": -0.94, "vol": 43, "amt": 0.25}, {"code": "603267", "name": "鸿远电子", "chg": -0.97, "vol": 20, "amt": 0.15}, {"code": "000636", "name": "风华高科", "chg": -2.17, "vol": 156, "amt": 1.14}, {"code": "603678", "name": "火炬电子", "chg": -3.78, "vol": 48, "amt": 0.31}]}];
+
+var sortKey='chg';
+function sortBy(k){
+  sortKey=k;
+  document.querySelectorAll('.tab').forEach(function(t,i){t.classList.toggle('act',(k==='chg'&&i===0)||(k==='vol'&&i===1))});
+  render();
+}
+
+function render(){
+  var sorted=DATA.slice().sort(function(a,b){
+    return sortKey==='chg'?b.avg_chg-a.avg_chg:b.total_amt-a.total_amt;
+  });
+  var body=document.getElementById('tbl-body');
+  body.innerHTML='';
+  sorted.forEach(function(r,i){
+    var chg=r.avg_chg;
+    var row=document.createElement('div');
+    row.className='tbl-row';
+    row.onclick=function(){toggleDetail(row,r.name);};
+    var topStock=r.stocks[0];
+    row.innerHTML=
+      '<div class="r">'+(i+1)+'</div>'+
+      '<div class="bar" style="background:'+r.color+'"></div>'+
+      '<div class="name">'+r.name+'</div>'+
+      '<div class="cnt">'+r.count+'</div>'+
+      '<div class="chg '+(chg>=0?'up':'dn')+'">'+(chg>=0?'+':'')+chg.toFixed(1)+'%'+(r.limit_up?' 🔥'+r.limit_up:'')+'</div>'+
+      '<div class="vol">'+r.total_amt.toFixed(1)+'</div>'+
+      '<div class="top">'+topStock.name+' '+(topStock.chg>=0?'+':'')+topStock.chg.toFixed(1)+'%</div>';
+    body.appendChild(row);
+
+    var detail=document.createElement('div');
+    detail.className='detail';
+    detail.id='det-'+r.name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g,'');
+    var ds='';
+    r.stocks.forEach(function(s){
+      ds+='<div class="ds"><span style="color:#484f58;font-size:10px">'+s.code+'</span><span class="dnm">'+s.name+'</span><span class="dchg '+(s.chg>=0?'up':'dn')+'">'+(s.chg>=0?'+':'')+s.chg.toFixed(1)+'%</span></div>';
+    });
+    detail.innerHTML=ds;
+    body.appendChild(detail);
+  });
+}
+
+var openDet=null;
+function toggleDetail(row, name){
+  var id='det-'+name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g,'');
+  var det=document.getElementById(id);
+  if(openDet&&openDet!==det){openDet.classList.remove('open');}
+  if(det.classList.contains('open')){det.classList.remove('open');openDet=null;}
+  else{det.classList.add('open');openDet=det;}
+}
+
+// 饼图
+(function(){
+  var chart=echarts.init(document.getElementById('pie-chart'));
+  var pieData=DATA.map(function(r){return {name:r.name,value:r.total_amt,itemStyle:{color:r.color}};});
+  pieData.sort(function(a,b){return b.value-a.value;});
+  var option={
+    tooltip:{trigger:'item',formatter:'{b}: {c}亿 ({d}%)'},
+    series:[{type:'pie',radius:['30%','70%'],center:['50%','50%'],data:pieData,
+      label:{fontSize:9,color:'#8b949e',formatter:'{b}\n{d}%'},
+      emphasis:{label:{fontSize:13,fontWeight:'bold'}}}],
+    backgroundColor:'transparent'
+  };
+  chart.setOption(option);
+  window.addEventListener('resize',function(){chart.resize();});
+})();
+
+render();
+</script>
+</body>
+</html>
