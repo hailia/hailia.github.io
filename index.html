@@ -201,48 +201,85 @@ function switchTab(code,tab,ev){
   if(tab==='f'&&chartInst[code+'_f'])chartInst[code+'_f'].resize();
 }
 
-// 日K线图
+// 日K线图（含MACD，仿标准股票软件）
 function renderKLine(code){
   var dom=document.getElementById('chk-'+code);
   var k=KL[code];if(!k||k.length<2){dom.innerHTML='<div style="color:#484f58;text-align:center;padding:40px">无K线数据</div>';return}
-  var dates=[],vals=[],vols=[],ma5=[],ma10=[],ma20=[];
+  var dates=[],vals=[],vols=[],closes=[];
   k.forEach(function(r){
     dates.push(r[0]);
-    vals.push([r[1],r[2],r[4],r[3]]); // [open,close,low,high]
+    vals.push([r[1],r[4],r[2],r[3]]); // [open,low,close,high] — ECharts candlestick格式
     vols.push(r[5]);
+    closes.push(r[2]);
   });
-  // MA计算
+  // MA
   function ma(arr,n){
     var res=[];
     for(var i=0;i<arr.length;i++){
       if(i<n-1){res.push(null);continue}
-      var sum=0;for(var j=i-n+1;j<=i;j++)sum+=arr[j][1];
-      res.push(sum/n);
+      var s=0;for(var j=i-n+1;j<=i;j++)s+=arr[j];res.push(s/n);
     }
     return res;
   }
-  ma5=ma(vals,5);ma10=ma(vals,10);ma20=ma(vals,20);
+  var ma5=ma(closes,5),ma10=ma(closes,10),ma20=ma(closes,20);
+  // MACD（标准公式）
+  function ema(arr,n){
+    var k=2/(n+1),res=[];
+    for(var i=0;i<arr.length;i++){
+      if(i===0){res.push(arr[0]);continue}
+      res.push(arr[i]*k+res[i-1]*(1-k));
+    }
+    return res;
+  }
+  var ema12=ema(closes,12),ema26=ema(closes,26);
+  var dif=[],dea=[],macd=[];
+  for(var i=0;i<closes.length;i++){
+    var d=ema12[i]-ema26[i];dif.push(d);
+    if(i<8){dea.push(null);macd.push(null);continue}
+    var de=0;for(var j=i-8;j<=i;j++)de+=dif[j];de/=9;
+    dea.push(de);macd.push(2*(d-de)*100);
+  }
 
   var chart=echarts.init(dom);
   chartInst[code+'_k']=chart;
-  var upColor='#f85149',downColor='#3fb950';
+  var up='#f85149',dn='#3fb950';
+  var last=closes[closes.length-1],prev=closes[closes.length-2];
+  var chgPct=prev?((last-prev)/prev*100):0;
+  var ohcl=vals[vals.length-1];
+  var infoTitle=code.replace('sh','').replace('sz','')+' '+'开'+ohcl[0].toFixed(2)+' 高'+ohcl[3].toFixed(2)+' 低'+ohcl[1].toFixed(2)+' 收'+ohcl[2].toFixed(2)+' '+(chgPct>=0?'+':'')+chgPct.toFixed(2)+'%';
   var option={
-    grid:[{left:8,right:8,top:8,height:'65%'},{left:8,right:8,top:'78%',height:'18%'}],
-    xAxis:[{type:'category',data:dates,gridIndex:0,axisLabel:{fontSize:8,color:'#6e7681',interval:Math.floor(dates.length/6)},axisLine:{lineStyle:{color:'#1c1c2a'}},axisTick:{show:false}},
-           {type:'category',data:dates,gridIndex:1,axisLabel:{show:false},axisLine:{lineStyle:{color:'#1c1c2a'}},axisTick:{show:false}}],
-    yAxis:[{type:'value',gridIndex:0,scale:true,splitLine:{lineStyle:{color:'#1c1c2a'}},axisLabel:{fontSize:8,color:'#6e7681',formatter:function(v){return v.toFixed(1)}}},
-           {type:'value',gridIndex:1,splitLine:{show:false},axisLabel:{show:false}}],
+    title:{text:infoTitle,left:6,top:4,textStyle:{fontSize:10,color:'#c9d1d9',fontWeight:'normal'}},
+    grid:[{left:8,right:8,top:30,height:'48%'},{left:8,right:8,top:'82%',height:'8%'},{left:8,right:8,top:'93%',height:'6%'}],
+    xAxis:[{type:'category',data:dates,gridIndex:0,axisLabel:{fontSize:7,color:'#6e7681',interval:Math.floor(dates.length/6)},axisLine:{lineStyle:{color:'#1c1c2a'}},axisTick:{show:false}},
+           {type:'category',data:dates,gridIndex:1,axisLabel:{show:false},axisLine:{lineStyle:{color:'#1c1c2a'}},axisTick:{show:false}},
+           {type:'category',data:dates,gridIndex:2,axisLabel:{show:false},axisLine:{lineStyle:{color:'#1c1c2a'}},axisTick:{show:false}}],
+    yAxis:[{type:'value',gridIndex:0,scale:true,splitLine:{lineStyle:{color:'#1c1c2a'}},axisLabel:{fontSize:7,color:'#6e7681',formatter:function(v){return v.toFixed(1)}}},
+           {type:'value',gridIndex:1,splitLine:{show:false},axisLabel:{show:false}},
+           {type:'value',gridIndex:2,splitLine:{lineStyle:{color:'#1c1c2a'}},axisLabel:{fontSize:6,color:'#6e7681'}}],
     series:[
-      {name:'K线',type:'candlestick',xAxisIndex:0,yAxisIndex:0,
-       data:vals,
-       itemStyle:{color:upColor,color0:downColor,borderColor:upColor,borderColor0:downColor}},
-      {name:'MA5',type:'line',xAxisIndex:0,yAxisIndex:0,data:ma5,smooth:true,lineStyle:{width:1,color:'#ff6b35'},symbol:'none'},
-      {name:'MA10',type:'line',xAxisIndex:0,yAxisIndex:0,data:ma10,smooth:true,lineStyle:{width:1,color:'#ffa502'},symbol:'none'},
-      {name:'MA20',type:'line',xAxisIndex:0,yAxisIndex:0,data:ma20,smooth:true,lineStyle:{width:1,color:'#1e90ff'},symbol:'none'},
+      {name:'K线',type:'candlestick',xAxisIndex:0,yAxisIndex:0,data:vals,
+       itemStyle:{color:up,color0:dn,borderColor:up,borderColor0:dn}},
+      {name:'MA5',type:'line',xAxisIndex:0,yAxisIndex:0,data:ma5,smooth:true,lineStyle:{width:1,color:'#ff6b35'},symbol:'none',
+       endLabel:{show:true,formatter:'MA5 {c}',fontSize:8,color:'#ff6b35',offset:[0,0]}},
+      {name:'MA10',type:'line',xAxisIndex:0,yAxisIndex:0,data:ma10,smooth:true,lineStyle:{width:1,color:'#ffa502'},symbol:'none',
+       endLabel:{show:true,formatter:'MA10 {c}',fontSize:8,color:'#ffa502',offset:[0,0]}},
+      {name:'MA20',type:'line',xAxisIndex:0,yAxisIndex:0,data:ma20,smooth:true,lineStyle:{width:1,color:'#1e90ff'},symbol:'none',
+       endLabel:{show:true,formatter:'MA20 {c}',fontSize:8,color:'#1e90ff',offset:[0,0]}},
       {name:'量',type:'bar',xAxisIndex:1,yAxisIndex:1,data:vols,
-       itemStyle:{color:function(p){return vals[p.dataIndex][1]<=vals[p.dataIndex][0]?downColor:upColor}}}
+       itemStyle:{color:function(p){var v=vals[p.dataIndex];return v[2]>=v[0]?up:dn}}},
+      {name:'MACD',type:'bar',xAxisIndex:2,yAxisIndex:2,data:macd,
+       itemStyle:{color:function(p){return macd[p.dataIndex]>=0?up:dn}}},
+      {name:'DIF',type:'line',xAxisIndex:2,yAxisIndex:2,data:dif,smooth:true,lineStyle:{width:1,color:'#ffffff'},symbol:'none'},
+      {name:'DEA',type:'line',xAxisIndex:2,yAxisIndex:2,data:dea,smooth:true,lineStyle:{width:1,color:'#ffa502'},symbol:'none'}
     ],
-    tooltip:{trigger:'axis',axisPointer:{type:'cross'}},
+    tooltip:{trigger:'axis',axisPointer:{type:'cross'},
+      formatter:function(ps){
+        var d=ps[0].axisValue;var s='<b>'+d+'</b><br/>';
+        for(var i=0;i<ps.length;i++){var p=ps[i];if(!p||p.value===undefined||p.value===null)continue;
+          var v=Array.isArray(p.value)?p.value:[p.value];
+          s+='<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+p.color+';margin-right:4px"></span>'+p.seriesName+': '+v.map(function(x){return typeof x==='number'?x.toFixed(2):x}).join('/')+'<br/>';}
+        return s;
+      }},
     backgroundColor:'transparent'
   };
   chart.setOption(option);
