@@ -211,7 +211,7 @@ function renderKLine(code){
   var dates=[],vals=[],vols=[],closes=[];
   k.forEach(function(r){
     dates.push(r[0]);
-    vals.push([r[1],r[4],r[2],r[3]]); // [open,low,close,high] — ECharts candlestick格式
+    vals.push([r[1],r[2],r[4],r[3]]); // [open,close,low,high] — ECharts candlestick格式
     vols.push(r[5]);
     closes.push(r[2]);
   });
